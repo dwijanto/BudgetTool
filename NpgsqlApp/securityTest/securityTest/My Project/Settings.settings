@@ -1,0 +1,35 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="DataBaseType" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PostgreSql</Value>
+    </Setting>
+    <Setting Name="validationkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C50B3C89CB21F4F1422FF158A5B42D0E8DB8CB5CDA1742572A487D9401E3400267682B202B746511891C1BAF47F8D25C07F6C39A104696DB51F17C529AD3CABE</Value>
+    </Setting>
+    <Setting Name="decriptionkey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">8A9BE8FD67AF6979E7D20198CFEA50DD3D3799C77AF2B72F</Value>
+    </Setting>
+    <Setting Name="validation" Type="System.String" Scope="User">
+      <Value Profile="(Default)">SHA1</Value>
+    </Setting>
+    <Setting Name="ConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString /&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CopyConnectionstring1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Host=hon10-0046D;database=hr;Port=5432;</Value>
+    </Setting>
+    <Setting Name="Connectionstring1" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Host=hon10-0046D;database=hr;Port=5433connection not from here, but djlib;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Host=hon10-0046D;database=hr;Port=5433connection not from here, but djlib;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

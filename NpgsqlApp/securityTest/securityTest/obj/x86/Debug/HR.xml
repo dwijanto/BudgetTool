@@ -1,0 +1,189 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+HR
+</name>
+</assembly>
+<members>
+<member name="P:HR.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:HR.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="P:HR.Resources.Administrator">
+	<summary>
+  Looks up a localized string similar to &amp;Administrator.
+</summary>
+</member><member name="P:HR.Resources.CancelButton">
+	<summary>
+  Looks up a localized string similar to &amp;Cancel.
+</summary>
+</member><member name="P:HR.Resources.CanNotCreateClass">
+	<summary>
+  Looks up a localized string similar to Can not create an instance of this class. Please use the static members of the class..
+</summary>
+</member><member name="P:HR.Resources.CustomUserInfo">
+	<summary>
+  Looks up a localized string similar to The current IPrincipal.IIdentiy object is of the type UserIdentity and contains the following properties:{0}.
+</summary>
+</member><member name="P:HR.Resources.DataAccessException">
+	<summary>
+  Looks up a localized string similar to Error while checking username and  password. Please try again!.
+</summary>
+</member><member name="P:HR.Resources.DoNotHaveRole">
+	<summary>
+  Looks up a localized string similar to You do not belong to the neccessary security role therefore you can not complete this operation..
+</summary>
+</member><member name="P:HR.Resources.ErrorReadingSecurityGroups">
+	<summary>
+  Looks up a localized string similar to Was not able to retrieve the list of security groups the user belongs to..
+</summary>
+</member><member name="P:HR.Resources.ErrorReadingSecurityRights">
+	<summary>
+  Looks up a localized string similar to Was not able to retrieve the list of security rights the user has..
+</summary>
+</member><member name="P:HR.Resources.ErrorReadingUserInfo">
+	<summary>
+  Looks up a localized string similar to Was not able to retrieve the user information for the user..
+</summary>
+</member><member name="P:HR.Resources.HasNotPermission">
+	<summary>
+  Looks up a localized string similar to The current user does NOT have the permission to perform this operation..
+</summary>
+</member><member name="P:HR.Resources.HasPermission">
+	<summary>
+  Looks up a localized string similar to The current user does have the permission to perform this operation..
+</summary>
+</member><member name="P:HR.Resources.LogOff">
+	<summary>
+  Looks up a localized string similar to Log &amp;Off.
+</summary>
+</member><member name="P:HR.Resources.MissingConnectionString">
+	<summary>
+  Looks up a localized string similar to There is no connection string defined. Please check the .config file!.
+</summary>
+</member><member name="P:HR.Resources.MissingInformation">
+	<summary>
+  Looks up a localized string similar to Logon manager.
+</summary>
+</member><member name="P:HR.Resources.MissingParamString">
+	<summary>
+  Looks up a localized string similar to There is no parameter name string defined. Please check the .config file!.
+</summary>
+</member><member name="P:HR.Resources.MissingSqlString">
+	<summary>
+  Looks up a localized string similar to There is no SQL command string defined. Please check the .config file!.
+</summary>
+</member><member name="P:HR.Resources.ModifyBudget">
+	<summary>
+  Looks up a localized string similar to Modify b&amp;udget.
+</summary>
+</member><member name="P:HR.Resources.ModifyInventory">
+	<summary>
+  Looks up a localized string similar to Modify i&amp;ventory.
+</summary>
+</member><member name="P:HR.Resources.ModifyProfit">
+	<summary>
+  Looks up a localized string similar to Modify pro&amp;fit.
+</summary>
+</member><member name="P:HR.Resources.ModifyRevenue">
+	<summary>
+  Looks up a localized string similar to Modify reve&amp;nue.
+</summary>
+</member><member name="P:HR.Resources.NoValidUserNameOrPassword">
+	<summary>
+  Looks up a localized string similar to Please enter a username and password!.
+</summary>
+</member><member name="P:HR.Resources.PowerUser">
+	<summary>
+  Looks up a localized string similar to &amp;Power user.
+</summary>
+</member><member name="P:HR.Resources.RoleOperationCompleted">
+	<summary>
+  Looks up a localized string similar to You passed the security role check and the operation has been completed..
+</summary>
+</member><member name="P:HR.Resources.StandardPropertyName">
+	<summary>
+  Looks up a localized string similar to Name.
+</summary>
+</member><member name="P:HR.Resources.StandardUserInfo">
+	<summary>
+  Looks up a localized string similar to The current IPrincipal.IIdentiy is of the standard IIdentity type contains the following properties:{0}.
+</summary>
+</member><member name="P:HR.Resources.SuperAdministrator">
+	<summary>
+  Looks up a localized string similar to &amp;Super admin.
+</summary>
+</member><member name="P:HR.Resources.User">
+	<summary>
+  Looks up a localized string similar to &amp;User.
+</summary>
+</member><member name="P:HR.Resources.UserDetails">
+	<summary>
+  Looks up a localized string similar to &amp;User info.
+</summary>
+</member><member name="P:HR.Resources.ViewBudget">
+	<summary>
+  Looks up a localized string similar to View &amp;budget.
+</summary>
+</member><member name="P:HR.Resources.ViewInventory">
+	<summary>
+  Looks up a localized string similar to View &amp;inventory.
+</summary>
+</member><member name="P:HR.Resources.ViewProfit">
+	<summary>
+  Looks up a localized string similar to View &amp;profit.
+</summary>
+</member><member name="P:HR.Resources.ViewRevenue">
+	<summary>
+  Looks up a localized string similar to View &amp;revenue.
+</summary>
+</member><member name="P:HR.Resources.WrongUserNameAndPassword">
+	<summary>
+  Looks up a localized string similar to The username and password you entered is not correct!.
+</summary>
+</member><member name="T:HR.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="P:HR.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:HR.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="P:HR.My.Resources.Resources.Resources">
+	<summary>
+  Looks up a localized string similar to &lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;root&gt;
+  &lt;!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers &amp; schema ...
+    &lt;resheader name="resmimetype"&gt;text/microsoft-resx&lt;/resheader&gt;
+    &lt;resheader n [rest of string was truncated]";.
+</summary>
+</member><member name="T:HR.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+</members>
+</doc>

@@ -1,0 +1,6 @@
+HR mod:
+-Function 
+	1.fgetbudgettxls(integer,date,date,integer)
+	2.fgetbudgettxusd(integer,date,date,integer)
+-ExcelTemplate
+	ExcelTxTemplate.xltx

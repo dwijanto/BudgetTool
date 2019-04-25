@@ -1,0 +1,913 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{45768763-1A73-409F-9F0A-04CD59370F72}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>HR.My.MyApplication</StartupObject>
+    <RootNamespace>HR</RootNamespace>
+    <AssemblyName>HR</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>HR.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>HR.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>HR4.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="npgsql, Version=2.0.14.3, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\Npgsql\v4.0_2.0.10.0__5d8b90d52f46fda7\npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design">
+      <HintPath>..\..\..\..\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Design.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\Base\BaseSortFilter.Designer.vb">
+      <DependentUpon>BaseSortFilter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Base\BaseSortFilter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\CollapssiblePanel\CollapseButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\CollapssiblePanel\CollapsiblePanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\CollapssiblePanel\CollapsiblePanelColorTable.vb" />
+    <Compile Include="Admin\CollapssiblePanel\CollapsiblePanelDesigner.vb" />
+    <Compile Include="Admin\CollapssiblePanel\CollapsibleHeaderButton.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\DbAdapter.vb" />
+    <Compile Include="Admin\DialogChangePassword.Designer.vb">
+      <DependentUpon>DialogChangePassword.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DialogChangePassword.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\DialogCreateUser.Designer.vb">
+      <DependentUpon>DialogCreateUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DialogCreateUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\DirectoryTree\DirectoryTree.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\FormBaseSortFilterNoDGV.Designer.vb">
+      <DependentUpon>FormBaseSortFilterNoDGV.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormBaseSortFilterNoDGV.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormMenuEditor.Designer.vb">
+      <DependentUpon>FormMenuEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormMenuEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormMenuMember.Designer.vb">
+      <DependentUpon>FormMenuMember.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormMenuMember.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormProgramCB.Designer.vb">
+      <DependentUpon>FormProgramCB.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormProgramCB.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormRoles.Designer.vb">
+      <DependentUpon>FormRoles.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormRoles.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormUserRoles.Designer.vb">
+      <DependentUpon>FormUserRoles.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormUserRoles.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\MeHost.Designer.vb">
+      <DependentUpon>MeHost.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\MeHost.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Admin\CollapssiblePanel\StateButtonBase.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\Progress\Progress.Designer.vb">
+      <DependentUpon>Progress.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Progress\Progress.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Admin\UCDoubleBufferPanel.Designer.vb">
+      <DependentUpon>UCDoubleBufferPanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UCDoubleBufferPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Admin\UCHeader.Designer.vb">
+      <DependentUpon>UCHeader.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UCHeader.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Admin\UCToolstrip.Designer.vb">
+      <DependentUpon>UCToolstrip.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UCToolstrip.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="FormBaseSortFilter.Designer.vb">
+      <DependentUpon>FormBaseSortFilter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormBaseSortFilter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\ButtonCustom.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="General\ClassComboCustom.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\ClassDataGridViewBand.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\ClassGDI4.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\ClassGDI6.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\ClassRowHeaderImage.vb" />
+    <Compile Include="General\ClassTicTacToe.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormBaseTest.Designer.vb">
+      <DependentUpon>FormBaseTest.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormBaseTest.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormDescendant.Designer.vb">
+      <DependentUpon>FormDescendant.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormDescendant.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormGDI.Designer.vb">
+      <DependentUpon>FormGDI.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormGDI.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormGDI2.Designer.vb">
+      <DependentUpon>FormGDI2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormGDI2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormGDI3.Designer.vb">
+      <DependentUpon>FormGDI3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormGDI3.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormInherit3.Designer.vb">
+      <DependentUpon>FormInherit3.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormInherit3.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\Form2.Designer.vb">
+      <DependentUpon>Form2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\Form2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormAnimal.Designer.vb">
+      <DependentUpon>FormAnimal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormAnimal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormAnimal2.Designer.vb">
+      <DependentUpon>FormAnimal2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormAnimal2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormAnimalInherit.Designer.vb">
+      <DependentUpon>FormAnimalInherit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormAnimalInherit.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormCombobox.Designer.vb">
+      <DependentUpon>FormCombobox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormCombobox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormComboBoxManual.Designer.vb">
+      <DependentUpon>FormComboBoxManual.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormComboBoxManual.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormComboBoxManualCopy.Designer.vb">
+      <DependentUpon>FormComboBoxManualCopy.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormComboBoxManualCopy.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormDataGridViewBand.Designer.vb">
+      <DependentUpon>FormDataGridViewBand.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormDataGridViewBand.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormExPetT.Designer.vb">
+      <DependentUpon>FormExPetT.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormExPetT.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormGetChanges.Designer.vb">
+      <DependentUpon>FormGetChanges.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormGetChanges.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormInherit2.Designer.vb">
+      <DependentUpon>FormInherit2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormInherit2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormSuspendLayout.Designer.vb">
+      <DependentUpon>FormSuspendLayout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormSuspendLayout.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormToolstripContainerTest.Designer.vb">
+      <DependentUpon>FormToolstripContainerTest.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormToolstripContainerTest.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormUnboundDataGridView.Designer.vb">
+      <DependentUpon>FormUnboundDataGridView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormUnboundDataGridView.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormVirtualMode.Designer.vb">
+      <DependentUpon>FormVirtualMode.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormVirtualMode.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\HelperClass.vb" />
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="General\DbAdapter.vb" />
+    <Compile Include="Admin\FormLogon.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormLogon.Designer.vb">
+      <DependentUpon>FormLogon.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormMenu.Designer.vb">
+      <DependentUpon>FormMenu.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormMenu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\InheritBase.Designer.vb">
+      <DependentUpon>InheritBase.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\InheritBase.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\Threading1.Designer.vb">
+      <DependentUpon>Threading1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\Threading1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\Threading2.Designer.vb">
+      <DependentUpon>Threading2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\Threading2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\UCCollapsiblePanel.Designer.vb">
+      <DependentUpon>UCCollapsiblePanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\UCCollapsiblePanel.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="General\UCHelper.vb" />
+    <Compile Include="General\UCFilterTx.Designer.vb">
+      <DependentUpon>UCFilterTx.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\UCFilterTx.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="General\UCSortTx.Designer.vb">
+      <DependentUpon>UCSortTx.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\UCSortTx.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="General\UserFlatButton.Designer.vb">
+      <DependentUpon>UserFlatButton.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\UserFlatButton.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\VisualStyleRendere.Designer.vb">
+      <DependentUpon>VisualStyleRendere.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\VisualStyleRendere.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\CalculateExpenses.Designer.vb">
+      <DependentUpon>CalculateExpenses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\CalculateExpenses.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\CalculateExpenses01.Designer.vb">
+      <DependentUpon>CalculateExpenses01.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\CalculateExpenses01.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ChartOfAccount.Designer.vb">
+      <DependentUpon>ChartOfAccount.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ChartOfAccount.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FCurrency.Designer.vb">
+      <DependentUpon>FCurrency.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FCurrency.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FGenerateReport001.Designer.vb">
+      <DependentUpon>FGenerateReport001.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FGenerateReport001.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FGenerateReport002.Designer.vb">
+      <DependentUpon>FGenerateReport002.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FGenerateReport002.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FormActualExpenses.Designer.vb">
+      <DependentUpon>FormActualExpenses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FormActualExpenses.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FormImportCAO.Designer.vb">
+      <DependentUpon>FormImportCAO.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FormImportCAO.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FParameters.Designer.vb">
+      <DependentUpon>FParameters.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FParameters.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\FPlan.Designer.vb">
+      <DependentUpon>FPlan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\FPlan.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\GroupCategory.Designer.vb">
+      <DependentUpon>GroupCategory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\GroupCategory.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ImportActualExpenses.Designer.vb">
+      <DependentUpon>ImportActualExpenses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ImportActualExpenses.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ImportFinanceInformation.Designer.vb">
+      <DependentUpon>ImportFinanceInformation.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ImportFinanceInformation.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ImportGroupingCategory.Designer.vb">
+      <DependentUpon>ImportGroupingCategory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ImportGroupingCategory.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ImportHRCategoryExpenses.Designer.vb">
+      <DependentUpon>ImportHRCategoryExpenses.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ImportHRCategoryExpenses.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HRGeneral\ImportHRInformation.Designer.vb">
+      <DependentUpon>ImportHRInformation.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HRGeneral\ImportHRInformation.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="General\ConcurrencyHandling.Designer.vb">
+      <DependentUpon>ConcurrencyHandling.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\ConcurrencyHandling.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Admin\FormProgram.Designer.vb">
+      <DependentUpon>FormProgram.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FormProgram.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormSingleTable.Designer.vb">
+      <DependentUpon>FormSingleTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormSingleTable.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="General\FormUser.Designer.vb">
+      <DependentUpon>FormUser.vb</DependentUpon>
+    </Compile>
+    <Compile Include="General\FormUser.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Admin\Base\BaseSortFilter.resx">
+      <DependentUpon>BaseSortFilter.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\DialogChangePassword.resx">
+      <DependentUpon>DialogChangePassword.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\DialogCreateUser.resx">
+      <DependentUpon>DialogCreateUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormBaseSortFilterNoDGV.resx">
+      <DependentUpon>FormBaseSortFilterNoDGV.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormMenuEditor.resx">
+      <DependentUpon>FormMenuEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormMenuMember.resx">
+      <DependentUpon>FormMenuMember.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormProgramCB.resx">
+      <DependentUpon>FormProgramCB.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormRoles.resx">
+      <DependentUpon>FormRoles.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormUserRoles.resx">
+      <DependentUpon>FormUserRoles.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormLogon.resx">
+      <DependentUpon>FormLogon.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormMenu.resx">
+      <DependentUpon>FormMenu.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\MeHost.resx">
+      <DependentUpon>MeHost.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\Progress\Progress.resx">
+      <DependentUpon>Progress.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\UCHeader.resx">
+      <DependentUpon>UCHeader.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\UCToolstrip.resx">
+      <DependentUpon>UCToolstrip.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBaseSortFilter.resx">
+      <DependentUpon>FormBaseSortFilter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\ClassComboCustom.resx">
+      <DependentUpon>ClassComboCustom.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\ClassDataGridViewBand.resx">
+      <DependentUpon>ClassDataGridViewBand.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\ClassGDI6.resx">
+      <DependentUpon>ClassGDI6.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\Form2.resx">
+      <DependentUpon>Form2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormAnimal.resx">
+      <DependentUpon>FormAnimal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormAnimal2.resx">
+      <DependentUpon>FormAnimal2.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormAnimalInherit.resx">
+      <DependentUpon>FormAnimalInherit.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormBaseTest.resx">
+      <DependentUpon>FormBaseTest.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormCombobox.resx">
+      <DependentUpon>FormCombobox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormComboBoxManual.resx">
+      <DependentUpon>FormComboBoxManual.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormComboBoxManualCopy.resx">
+      <DependentUpon>FormComboBoxManualCopy.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormDataGridViewBand.resx">
+      <DependentUpon>FormDataGridViewBand.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormDescendant.resx">
+      <DependentUpon>FormDescendant.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormExPetT.resx">
+      <DependentUpon>FormExPetT.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormGDI.resx">
+      <DependentUpon>FormGDI.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormGDI2.resx">
+      <DependentUpon>FormGDI2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormGDI3.resx">
+      <DependentUpon>FormGDI3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormGetChanges.resx">
+      <DependentUpon>FormGetChanges.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormInherit2.resx">
+      <DependentUpon>FormInherit2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormInherit3.resx">
+      <DependentUpon>FormInherit3.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormSuspendLayout.resx">
+      <DependentUpon>FormSuspendLayout.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormToolstripContainerTest.resx">
+      <DependentUpon>FormToolstripContainerTest.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormVirtualMode.resx">
+      <DependentUpon>FormVirtualMode.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\InheritBase.resx">
+      <DependentUpon>InheritBase.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\Threading1.resx">
+      <DependentUpon>Threading1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\Threading2.resx">
+      <DependentUpon>Threading2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\UCCollapsiblePanel.resx">
+      <DependentUpon>UCCollapsiblePanel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\UCFilterTx.resx">
+      <DependentUpon>UCFilterTx.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\UCSortTx.resx">
+      <DependentUpon>UCSortTx.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\VisualStyleRendere.resx">
+      <DependentUpon>VisualStyleRendere.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\CalculateExpenses.resx">
+      <DependentUpon>CalculateExpenses.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\CalculateExpenses01.resx">
+      <DependentUpon>CalculateExpenses01.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ChartOfAccount.resx">
+      <DependentUpon>ChartOfAccount.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FCurrency.resx">
+      <DependentUpon>FCurrency.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FGenerateReport001.resx">
+      <DependentUpon>FGenerateReport001.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FGenerateReport002.resx">
+      <DependentUpon>FGenerateReport002.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FormActualExpenses.resx">
+      <DependentUpon>FormActualExpenses.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FormImportCAO.resx">
+      <DependentUpon>FormImportCAO.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FParameters.resx">
+      <DependentUpon>FParameters.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\FPlan.resx">
+      <DependentUpon>FPlan.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\GroupCategory.resx">
+      <DependentUpon>GroupCategory.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ImportActualExpenses.resx">
+      <DependentUpon>ImportActualExpenses.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ImportFinanceInformation.resx">
+      <DependentUpon>ImportFinanceInformation.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ImportGroupingCategory.resx">
+      <DependentUpon>ImportGroupingCategory.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ImportHRCategoryExpenses.resx">
+      <DependentUpon>ImportHRCategoryExpenses.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HRGeneral\ImportHRInformation.resx">
+      <DependentUpon>ImportHRInformation.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\ConcurrencyHandling.resx">
+      <DependentUpon>ConcurrencyHandling.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\FormProgram.resx">
+      <DependentUpon>FormProgram.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormSingleTable.resx">
+      <DependentUpon>FormSingleTable.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="General\FormUser.resx">
+      <DependentUpon>FormUser.vb</DependentUpon>
+    </EmbeddedResource>
+    <None Include="My Project\app.manifest" />
+    <None Include="mySnippet\MyCustom.snippet">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="images\Penguins.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="HR.ico" />
+    <Content Include="HR1.ico" />
+    <Content Include="HR2.ico" />
+    <Content Include="HR4.ico" />
+    <Content Include="images\Green.bmp" />
+    <Content Include="images\Red.bmp" />
+    <None Include="Resources\excel1.png" />
+    <None Include="Resources\Crystal_Clear_app_Login_Manager.png" />
+    <None Include="Resources\ieframe_806.png" />
+    <None Include="Resources\ieframe_805.png" />
+    <None Include="Resources\ieframe_804.png" />
+    <None Include="Resources\ieframe_636.png" />
+    <None Include="Resources\ieframe_635.png" />
+    <None Include="Resources\ieframe_634.png" />
+    <None Include="Resources\ieframe_588.png" />
+    <None Include="Resources\ieframe_587.png" />
+    <None Include="Resources\ieframe_586.png" />
+    <None Include="Resources\ieframe_585.png" />
+    <None Include="Resources\ieframe_584.png" />
+    <None Include="Resources\ieframe_583.png" />
+    <None Include="Resources\ieframe_563.png" />
+    <None Include="Resources\ieframe_562.png" />
+    <None Include="Resources\ieframe_561.png" />
+    <None Include="Resources\ieframe_560.png" />
+    <None Include="Resources\object-flip-vertical.png" />
+    <None Include="Resources\object-flip-horizontal.png" />
+    <None Include="Resources\view-refresh.png" />
+    <None Include="Resources\plusbox.jpg" />
+    <None Include="Resources\minus.jpg" />
+    <None Include="Resources\go-top.png" />
+    <None Include="Resources\go-bottom.png" />
+    <None Include="Resources\dialog-close.png" />
+    <None Include="Resources\Clear Green Button16.png" />
+    <None Include="Resources\Image1.bmp" />
+    <EmbeddedResource Include="images\stock_autofilter.png" />
+    <EmbeddedResource Include="images\stock_advanced-filter.png" />
+    <Content Include="images\Yellow.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\DJLib\DJLib.vbproj">
+      <Project>{744C93D1-44E9-4678-9315-25634864A836}</Project>
+      <Name>DJLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="Microsoft.Office.Interop.Excel">
+      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>9</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
