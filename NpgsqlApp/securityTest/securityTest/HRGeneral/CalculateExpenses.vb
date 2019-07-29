@@ -480,15 +480,15 @@ Public Class CalculateExpenses
                          " left join personjoindatecategory pjc on pjc.personjoindatecategoryid = i.personjoindatecategoryid" & _
                          " left join category c on c.categoryid = pjc.categoryid" & _
                          " left join personjoindate pj on pj.personjoindateid= pjc.personjoindateid " & _
-                         " left join person p on p.personid = pj.personid where c.regionid =  " & dbtools1.RegionId & ") ;copy budgettx(personexpensesid,amount,ver,mydate,headcount) from stdin;"
+                         " left join person p on p.personid = pj.personid where c.regionid =  " & dbtools1.RegionId & " order by personexpensesid) ;copy budgettx(personexpensesid,amount,ver,mydate,headcount) from stdin;"
 
                 If stringBuilder1.ToString <> "" Then
 
                     '****
                     'Dim errorFilename As String = "c:\junk\PersonalError.txt"
                     'Using sw As StreamWriter = File.CreateText(errorFilename)
-                    'sw.WriteLine(stringBuilder1.ToString)
-                    'sw.Close()
+                    '    sw.WriteLine(stringBuilder1.ToString)
+                    '    sw.Close()
                     'End Using
                     'Process.Start(errorFilename)
 
@@ -1497,9 +1497,9 @@ Public Class CalculateExpenses
             'get grosssalary jan-Dec + 13th Month
             Try
 
-                Dim validmonth As Double
-                If p.Item("enddate").ToString <> "" Then
-                    validmonth = getvalidmonth(joindate, p.Item("enddate"))
+                Dim validmonth As Double 'valid month always 12 
+                If p.Item("enddate").ToString <> "" Then                    
+                    validmonth = 12 'getvalidmonth(joindate, p.Item("enddate"))
                 Else
                     validmonth = getvalidmonth(joindate)
                 End If
@@ -1514,9 +1514,8 @@ Public Class CalculateExpenses
                     End If
                     If Not IsDBNull(p.Item("enddate")) Then
                         enddate = p.Item("enddate")
-                        LastMonthSalary = Month(enddate)
-                    End If
-                    If Not IsDBNull(p.Item("effectivedateend")) Then
+                        LastMonthSalary = 12 'Month(enddate)
+                    ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
                         enddate = p.Item("effectivedateend")
                         LastMonthSalary = Month(enddate)
                     End If
@@ -1641,8 +1640,8 @@ Public Class CalculateExpenses
     Private Sub LocalBonus(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Object, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
         Dim expensesnature = "Local Bonus"
         Debug.WriteLine("apply: {2} For Personjoindatecategoryid: {0}, expensesnatureid: {1}  - {2},personexpensesid: {3} ,person: {4} ", personjoindatecategoryid, 0, expensesnature, personexpensesid, p.Item("othername"))
-        If personjoindatecategoryid = 2439 Then
-            Debug.WriteLine("Mettew")
+        If personjoindatecategoryid = 860 Then
+            Debug.WriteLine("Jasmine")
         End If
         Dim qry = From expenses In Dataset1.Tables(5)
                    Where expenses.Item("personjoindatecategoryid") = personjoindatecategoryid And expenses.Item("expensesnature") = expensesnature And expenses.Item("validdate") <= CDate(DateTimePicker1.Value.Year & "/12/31")
@@ -1698,7 +1697,9 @@ Public Class CalculateExpenses
 
                 'Debug.WriteLine("personexpensesid {1} amount {2} expensesnature {3} personjoindatecategoryid {4}", personexpensesid, myamount, expensesnature, personjoindatecategoryid)
                 'Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12) * 13 * myamount * DbAdapter1.gettargetrate(personjoindatecategoryid, EndOFYear)
-                Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary) * bonusfactor * DbAdapter1.gettargetrate(personjoindatecategoryid, EndOFYear)
+                Dim grosssalary As Double
+                grosssalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary) * bonusfactor * myamount * DbAdapter1.gettargetrate(personjoindatecategoryid, EndOFYear)
+               
                 'persondata1.bonus += grosssalary
                 PersonSalaryDict(personjoindatecategoryid).bonus += grosssalary
 
@@ -2189,7 +2190,7 @@ Public Class CalculateExpenses
         If myamount > 0 Then
             'Personal
             Try
-                Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12) * 13 * myamount
+                Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12) * 13 * myamount * DbAdapter1.gettargetrate(personjoindatecategoryid, EndOFYear)
                 'persondata1.bonus += grosssalary
                 PersonSalaryDict(personjoindatecategoryid).bonus += grosssalary
 
@@ -2252,7 +2253,7 @@ Public Class CalculateExpenses
 
             For Each dt In qry3
                 myamount = dt.Item("amount")
-                Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12) * 13 * myamount
+                Dim grosssalary As Double = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12) * 13 * myamount * DbAdapter1.gettargetrate(personjoindatecategoryid, EndOFYear)
                 'persondata1.bonus += grosssalary
                 PersonSalaryDict(personjoindatecategoryid).bonus += grosssalary
                 If personjoindatecategoryid = 28 Then

@@ -161,3 +161,16 @@ C:\Work\vb2010\HR\DJLib\obj\Debug\DJLib.dll
 C:\Work\vb2010\HR\DJLib\obj\Debug\DJLib.xml
 C:\Work\vb2010\HR\DJLib\obj\Debug\DJLib.pdb
 C:\Work\vb2010\HR\DJLib\obj\Debug\DJLib.vbprojResolveAssemblyReference.cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\bin\Debug\DJLib.dll.config
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\bin\Debug\DJLib.dll
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\bin\Debug\DJLib.pdb
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\bin\Debug\DJLib.xml
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.vbprojResolveAssemblyReference.cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.vbproj.ResolveComReference.cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.DialogAdvancedFilter.resources
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.Host.resources
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.Resources.resources
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.vbproj.GenerateResource.Cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.dll
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.xml
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.pdb

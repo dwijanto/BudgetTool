@@ -56,3 +56,11 @@ C:\Work\vb2010\HR\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.v
 C:\Work\vb2010\HR\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.dll
 C:\Work\vb2010\HR\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.xml
 C:\Work\vb2010\HR\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.pdb
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\bin\Debug\DirectoryTree.dll
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\bin\Debug\DirectoryTree.pdb
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\bin\Debug\DirectoryTree.xml
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.Resources.resources
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.vbproj.GenerateResource.Cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.dll
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.xml
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\DirectoryTree\obj\Debug\DirectoryTree.pdb
