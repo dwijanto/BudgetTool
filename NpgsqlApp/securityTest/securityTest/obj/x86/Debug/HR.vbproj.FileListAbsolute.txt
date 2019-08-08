@@ -407,3 +407,5 @@ C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\ob
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\obj\x86\Debug\HR.FormSingleTable.resources
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\obj\x86\Debug\HR.FormUser.resources
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\obj\x86\Debug\HR.vbproj.GenerateResource.Cache
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\bin\Debug\npgsql.dll
+C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\bin\Debug\Mono.Security.dll

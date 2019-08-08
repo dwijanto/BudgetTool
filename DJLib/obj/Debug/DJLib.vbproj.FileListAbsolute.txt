@@ -174,3 +174,4 @@ C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.vbproj.GenerateR
 C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.dll
 C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.xml
 C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\obj\Debug\DJLib.pdb
+C:\Users\dlie\Documents\GitHub\BudgetTool\DJLib\bin\Debug\npgsql.dll
