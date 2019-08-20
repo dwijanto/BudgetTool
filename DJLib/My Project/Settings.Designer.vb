@@ -562,7 +562,7 @@ Namespace My
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Host=hon25nt;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;")>  _
         Public ReadOnly Property connectionstring1() As String
             Get
                 Return CType(Me("connectionstring1"),String)
@@ -578,6 +578,30 @@ Namespace My
             End Get
             Set
                 Me("con8") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Host=hon25nt;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;")>  _
+        Public Property con9() As String
+            Get
+                Return CType(Me("con9"),String)
+            End Get
+            Set
+                Me("con9") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;")>  _
+        Public Property con10() As String
+            Get
+                Return CType(Me("con10"),String)
+            End Get
+            Set
+                Me("con10") = value
             End Set
         End Property
     End Class

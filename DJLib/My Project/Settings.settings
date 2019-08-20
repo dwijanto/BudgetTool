@@ -131,12 +131,18 @@
     <Setting Name="connectionstring1" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;ConnectionString&gt;Host=hon25nt;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;&lt;/ConnectionString&gt;
+  &lt;ConnectionString&gt;Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;&lt;/ConnectionString&gt;
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
-      <Value Profile="(Default)">Host=hon25nt;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
+      <Value Profile="(Default)">Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
     </Setting>
     <Setting Name="con8" Type="System.String" Scope="User">
       <Value Profile="(Default)">Host=hon10-0046D;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
+    </Setting>
+    <Setting Name="con9" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Host=hon25nt;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
+    </Setting>
+    <Setting Name="con10" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
     </Setting>
   </Settings>
 </SettingsFile>
