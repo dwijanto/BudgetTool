@@ -512,6 +512,7 @@ Public Class ImportHRInformation
                         If txtype <> "" Then
                             For J = 14 To iRows
                                 If Not IsNothing(oSheet.Cells(J, i + 1).value) Then
+                                    BackgroundWorker1.ReportProgress(2, "Processing Column " & i & " of " & iCols & ".Row " & J)
                                     Dim startingdate As Date = getdate(oSheet.Cells(J, i + 1).value.ToString, myyear)
                                     Dim amount As Double = oSheet.Cells(J, i).value.ToString
                                     If txtype = "catch up" Then
@@ -532,6 +533,7 @@ Public Class ImportHRInformation
                             Dim familymemberid As Integer = 0
                             For J = 14 To iRows
                                 If Not IsNothing(oSheet.Cells(J, i).value) Then
+                                    BackgroundWorker1.ReportProgress(2, "Processing Column " & i & " of " & iCols & ".Row " & J)
 
                                     Dim expat As Boolean = False
                                     If Not IsNothing(oSheet.Cells(J, 11).value) Then

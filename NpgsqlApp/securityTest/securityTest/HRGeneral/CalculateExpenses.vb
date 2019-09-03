@@ -300,13 +300,20 @@ Public Class CalculateExpenses
                  " where categorytype = 'Local medical expenses' and ctx.myyear = " & myyear & " and ctx.verid = " & myverid & " ;"
         sb.Append(sqlstr)
         'Table 12 family member plan
+        'sb.Append("select personjoindateid,planname,f.planid,count,amount,validfrom  from" & _
+        '          " familymemberplan f" & _
+        '          " left join (SELECT p.planid, p.planname, sum(px.nominal) as amount, px.validfrom " & _
+        '       " FROM plantx px " & _
+        '       " LEFT JOIN plan p ON p.planid = px.planid" & _
+        '       " LEFT JOIN plantype pt ON pt.plantypeid = px.plantypeid" & _
+        '       " where px.validfrom <= " & DateFormatyyyyMMdd(EndOFYear) & "group by p.planid, p.planname,px.validfrom )as ptx on ptx.planid = f.planid;")
         sb.Append("select personjoindateid,planname,f.planid,count,amount,validfrom  from" & _
                   " familymemberplan f" & _
                   " left join (SELECT p.planid, p.planname, sum(px.nominal) as amount, px.validfrom " & _
                " FROM plantx px " & _
                " LEFT JOIN plan p ON p.planid = px.planid" & _
                " LEFT JOIN plantype pt ON pt.plantypeid = px.plantypeid" & _
-               " where px.validfrom <= " & DateFormatyyyyMMdd(EndOFYear) & "group by p.planid, p.planname,px.validfrom )as ptx on ptx.planid = f.planid;")
+               " where px.validfrom <= " & DateFormatyyyyMMdd(EndOFYear) & "group by p.planid, p.planname,px.validfrom )as ptx on ptx.planid = f.planid where verid = " & myverid & " and myyear = " & myyear & ";")
         sqlstr = sb.ToString
         'Table 13 expenses nature
         'sb.Append("select expensesdetailtxid,sapaccname,expensesnatureid,expensesnature,sapaccount,sapaccid,sapcc,dept,currency,fullyear,indexcostcenterdeptid,icdpjcid from fgetexpensesdetailtx(")
@@ -537,7 +544,7 @@ Public Class CalculateExpenses
             Dim persondata1 As New persondata
             i += 1
             Debug.WriteLine(String.Format("{0} StaffName:{1} OtherName:{2} PersonJoindateCategoryId:{3}", i, p.Item(1).ToString, p.Item(2).ToString, p.Item("personjoindatecategoryid")))
-            If p.Item(1) = "03423985" Then 'Or p.Item(1) = "03405769" Then
+            If p.Item(1) = "FU Kang" Then 'Or p.Item(1) = "03405769" Then
                 Debug.Print("debug")
             End If
             Dim serviceyear As Double = 0.0
@@ -759,7 +766,7 @@ Public Class CalculateExpenses
                             createrecord(stringBuilder1, personexpensesid, mytempsalary, myverid, mydate, p.Item("headcount"), enddate)
                         End If
 
-                        If p.Item("personname") = "ZHOU Cheng Jin" Then
+                        If p.Item("personname") = "FU Kang" Then
                             'MessageBox.Show("ZHOU Cheng Jin - Create Record Salary. Personexpensesid = " & personexpensesid & ", Month = " & K)
                         End If
 
@@ -857,8 +864,9 @@ Public Class CalculateExpenses
                     If dr.Item("expensesnature") = "Salary tax by ER" Or
                         dr.Item("expensesnature") = "Insurance - Housing" Or
                         dr.Item("expensesnature") = "Trip credit" Or
+                         dr.Item("expensesnature") = "Bonus" Or
                         dr.Item("expensesnature") = "Travel Insur AIG (PUR)" Then
-                        'Debug.Print("Test")
+                        Debug.Print("Test")
                     End If
 
                     If dr.Item("expensesnature") = "13th Month" Then
@@ -978,6 +986,10 @@ Public Class CalculateExpenses
                         End If
                         If Not IsDBNull(person.Item("effectivedateend")) Then
                             enddate = person.Item("effectivedateend")
+                        End If
+                    Else
+                        If Not IsDBNull(person.Item("enddate")) Then
+                            enddate = person.Item("enddate")
                         End If
                     End If
 
@@ -1214,49 +1226,96 @@ Public Class CalculateExpenses
     End Sub
     Private Sub DoublePay(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Integer, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
 
-        Dim qry3 = From category In Dataset1.Tables(3)
+        'For HK, double pay is based on Personal Data column N (No. of Months (Bonus))
+        '13 -> has 13th Month
+        'other than that doesn't have 13th Month
+
+        If dbtools1.Region = "HK" Then
+            'Check bonusfactor. if 13 then continue with the calculation
+            If Not IsDBNull(p.Item("bonusfactor")) Then
+                If p.Item("bonusfactor") = 13 Then
+                    Dim validmonth As Integer = 12
+                    Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+                    Dim LastSalary As Decimal
+                    'Calculate 13th month 
+                    Dim enddate As Date? = Nothing
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
+                    Dim bonusfactor As Integer = 13
+                    Dim StartMonthSalary As Integer = 1
+                    Dim LastMonthSalary As Integer = 12
+
+                    If Not IsDBNull(p.Item("effectivedatestart")) Then
+                        joindate = p.Item("effectivedatestart")
+                        StartMonthSalary = Month(joindate)
+                    End If
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                        LastMonthSalary = 12 'Month(enddate)
+                    ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+                        enddate = p.Item("effectivedateend")
+                        LastMonthSalary = Month(enddate)
+                    End If
+                    bonusfactor = p.Item("bonusfactor")
+                    LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+                    validmonth = LastMonthSalary - StartMonthSalary + 1
+                    Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+                    'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+                    For k = StartMonthSalary To LastMonthSalary
+                        createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+                    Next
+
+                    'Create record
+                End If
+            End If
+        Else
+            Dim qry3 = From category In Dataset1.Tables(3)
                                   Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
                                   Select category
-        'Category listed
+            'Category listed
 
-        For Each dt In qry3
-            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
-            Dim lastsalary As Double = 0
-            Try
-                lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
-            Catch ex As Exception
+            For Each dt In qry3
+                Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+                Dim lastsalary As Double = 0
+                Try
+                    lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
+                Catch ex As Exception
 
-            End Try
+                End Try
 
-            'Probation
-            If joindate > CDate(myyear & "-10-01") Then lastsalary = 0
-            If lastsalary > 0 Then
-                'Dim doublepay = lastsalary * enttitlement * p.Item("headcount")
-                Dim doublepay = lastsalary * enttitlement '* p.Item("headcount")
-                PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay
-                If dbtools1.Region = "TW" Or dbtools1.Region = "HK" Or dbtools1.Region = "PH" Then
-                    'doublepay = doublepay / 12
-                    doublepay = ValidateJoinDate(joindate, p.Item("enddate"), doublepay) 'monthly
-                End If
-
-                
-                'get categorytxmonths
-                Dim mymonths = From myrecord In Dataset1.Tables(14)
-                               Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = "13th Month"
-                               Select myrecord
-
-                For Each record In mymonths
-                    If ValidJoinDate(joindate, record.Item("months"), myyear) Then
-                        createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
+                'Probation
+                If joindate > CDate(myyear & "-10-01") Then lastsalary = 0
+                If lastsalary > 0 Then
+                    'Dim doublepay = lastsalary * enttitlement * p.Item("headcount")
+                    Dim doublepay = lastsalary * enttitlement '* p.Item("headcount")
+                    PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay
+                    If dbtools1.Region = "TW" Or dbtools1.Region = "HK" Or dbtools1.Region = "PH" Then
+                        'doublepay = doublepay / 12
+                        doublepay = ValidateJoinDate(joindate, p.Item("enddate"), doublepay) 'monthly
                     End If
 
-                Next
-                'persondata1.doublepay = doublepay
-                'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
-                'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
-            End If
 
-        Next
+                    'get categorytxmonths
+                    Dim mymonths = From myrecord In Dataset1.Tables(14)
+                                   Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = "13th Month"
+                                   Select myrecord
+
+                    For Each record In mymonths
+                        If ValidJoinDate(joindate, record.Item("months"), myyear) Then
+                            createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
+                        End If
+
+                    Next
+                    'persondata1.doublepay = doublepay
+                    'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
+                    'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
+                End If
+
+            Next
+        End If
+
+
     End Sub
 
     Private Sub GroupBonus1(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Object, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
@@ -1498,19 +1557,28 @@ Public Class CalculateExpenses
             Try
 
                 Dim validmonth As Double 'valid month always 12 
-                If p.Item("enddate").ToString <> "" Then                    
+                If p.Item("enddate").ToString <> "" Then
                     validmonth = 12 'getvalidmonth(joindate, p.Item("enddate"))
                 Else
                     validmonth = getvalidmonth(joindate)
                 End If
+
+
+
                 'Override For HK EffectiveDate, 
 
                 Dim enddate As Date? = Nothing
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                End If
                 Dim bonusfactor As Integer = 12
                 Dim LastMonthSalary As Integer = 12
+                Dim StartMonthSalary As Integer = 1
+
                 If dbtools1.Region = "HK" Then
                     If Not IsDBNull(p.Item("effectivedatestart")) Then
                         joindate = p.Item("effectivedatestart")
+                        StartMonthSalary = Month(joindate)
                     End If
                     If Not IsDBNull(p.Item("enddate")) Then
                         enddate = p.Item("enddate")
@@ -1527,7 +1595,13 @@ Public Class CalculateExpenses
                         'validmonth = getvalidmonthEF(joindate) / 12 'Get ValidMonth Effective Date
                     End If
                     bonusfactor = p.Item("bonusfactor")
+                Else
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                 End If
+
+                'validmonth = LastMonthSalary - StartMonthSalary + 1
 
                 'Dim grosssalary As Double = 0
                 'Dim grosssalary As Double = getGrossSalary(PersonSalaryDict, personjoindatecategoryid)
@@ -1671,6 +1745,9 @@ Public Class CalculateExpenses
                 'End If
 
                 Dim enddate As Date? = Nothing
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                End If
                 Dim bonusfactor As Integer = 13
                 Dim LastMonthSalary As Integer = 12
                 If dbtools1.Region = "HK" Then
@@ -1692,7 +1769,7 @@ Public Class CalculateExpenses
                     Else
                         validmonth = getvalidmonthEF(joindate)  'Get ValidMonth Effective Date
                     End If
-                    bonusfactor = p.Item("bonusfactor")
+                    bonusfactor = p.Item("bonusfactor")                  
                 End If
 
                 'Debug.WriteLine("personexpensesid {1} amount {2} expensesnature {3} personjoindatecategoryid {4}", personexpensesid, myamount, expensesnature, personjoindatecategoryid)
@@ -2218,6 +2295,10 @@ Public Class CalculateExpenses
                     If Not IsDBNull(p.Item("effectivedateend")) Then
                         enddate = p.Item("effectivedateend")
                     End If
+                Else
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                 End If
 
                 Dim mymonths = From myrecord In Dataset1.Tables(16)
@@ -2272,6 +2353,9 @@ Public Class CalculateExpenses
                 'End If
 
                 Dim enddate As Date? = Nothing
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                End If
                 If dbtools1.Region = "HK" Then
                     If Not IsDBNull(p.Item("effectivedatestart")) Then
                         joindate = p.Item("effectivedatestart")
@@ -2281,6 +2365,10 @@ Public Class CalculateExpenses
                     End If
                     If Not IsDBNull(p.Item("effectivedateend")) Then
                         enddate = p.Item("effectivedateend")
+                    End If
+                Else
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
                     End If
                 End If
                 Dim mymonths = From myrecord In Dataset1.Tables(14)
@@ -2397,6 +2485,9 @@ Public Class CalculateExpenses
 
 
             Dim enddate As Date? = Nothing
+            If Not IsDBNull(p.Item("enddate")) Then
+                enddate = p.Item("enddate")
+            End If
             If dbtools1.Region = "HK" Then
                 If Not IsDBNull(p.Item("effectivedatestart")) Then
                     joindate = p.Item("effectivedatestart")
@@ -2406,6 +2497,10 @@ Public Class CalculateExpenses
                 End If
                 If Not IsDBNull(p.Item("effectivedateend")) Then
                     enddate = p.Item("effectivedateend")
+                End If
+            Else
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
                 End If
             End If
 
@@ -2639,6 +2734,10 @@ Public Class CalculateExpenses
                 If Not IsDBNull(p.Item("effectivedateend")) Then
                     enddate = p.Item("effectivedateend")
                 End If
+            Else
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                End If
             End If
 
             For Each record In mymonths
@@ -2802,6 +2901,10 @@ Public Class CalculateExpenses
                     If Not IsDBNull(p.Item("effectivedateend")) Then
                         enddate = p.Item("effectivedateend")
                     End If
+                Else
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                 End If
 
 
@@ -2889,6 +2992,10 @@ Public Class CalculateExpenses
                         End If
                         If Not IsDBNull(p.Item("effectivedateend")) Then
                             enddate = p.Item("effectivedateend")
+                        End If
+                    Else
+                        If Not IsDBNull(p.Item("enddate")) Then
+                            enddate = p.Item("enddate")
                         End If
                     End If
 
@@ -3155,6 +3262,9 @@ Public Class CalculateExpenses
             End If
 
             Dim enddate As Date? = Nothing
+            If Not IsDBNull(p.Item("enddate")) Then
+                enddate = p.Item("enddate")
+            End If
             If dbtools1.Region = "HK" Then
                 If Not IsDBNull(p.Item("effectivedatestart")) Then
                     joindate = p.Item("effectivedatestart")
@@ -3164,6 +3274,10 @@ Public Class CalculateExpenses
                 End If
                 If Not IsDBNull(p.Item("effectivedateend")) Then
                     enddate = p.Item("effectivedateend")
+                End If
+            Else
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
                 End If
             End If
 
@@ -3372,6 +3486,11 @@ Public Class CalculateExpenses
                 '    Next
                 'End If
                 If myamount > 0 Then
+
+                    If p.Item("personname") = "FU Kang" Then
+                        Debug.Print("debug mode")
+                    End If
+
                     'Dim mymonths = From myrecord In Dataset1.Tables(14)
                     '           Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = dr.Item("expensesnature")
                     '           Select myrecord
@@ -3382,6 +3501,9 @@ Public Class CalculateExpenses
 
                     'change join date
                     Dim enddate As Date? = Nothing
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                     If dbtools1.Region = "HK" Then
                         If Not IsDBNull(p.Item("effectivedatestart")) Then
                             joindate = p.Item("effectivedatestart")
@@ -3391,6 +3513,10 @@ Public Class CalculateExpenses
                         End If
                         If Not IsDBNull(p.Item("effectivedateend")) Then
                             enddate = p.Item("effectivedateend")
+                        End If
+                    Else
+                        If Not IsDBNull(p.Item("enddate")) Then
+                            enddate = p.Item("enddate")
                         End If
                     End If
 
@@ -3469,6 +3595,9 @@ Public Class CalculateExpenses
                     Next
 
                 ElseIf myamount <= 0 Then
+                    If p.Item("personname") = "FU Kang" Then
+                        Debug.Print("debug mode")
+                    End If
                     Dim qry3 = From category In Dataset1.Tables(3)
                                Where category.Item("category") = mycategory And category.Item("categorytype") = dr.Item("expensesnature") And category.Item("myyear") = myyear
                                Select category
@@ -3487,6 +3616,9 @@ Public Class CalculateExpenses
 
 
                     Dim enddate As Date? = Nothing
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                     If dbtools1.Region = "HK" Then
                         If Not IsDBNull(p.Item("effectivedatestart")) Then
                             joindate = p.Item("effectivedatestart")
@@ -3496,6 +3628,10 @@ Public Class CalculateExpenses
                         End If
                         If Not IsDBNull(p.Item("effectivedateend")) Then
                             enddate = p.Item("effectivedateend")
+                        End If
+                    Else
+                        If Not IsDBNull(p.Item("enddate")) Then
+                            enddate = p.Item("enddate")
                         End If
                     End If
 
@@ -3940,6 +4076,9 @@ Public Class CalculateExpenses
                     totalsalary *= myamount
 
                     Dim enddate As Date? = Nothing
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
                     If dbtools1.Region = "HK" Then
                         If Not IsDBNull(p.Item("effectivedatestart")) Then
                             joindate = p.Item("effectivedatestart")
@@ -3949,6 +4088,10 @@ Public Class CalculateExpenses
                         End If
                         If Not IsDBNull(p.Item("effectivedateend")) Then
                             enddate = p.Item("effectivedateend")
+                        End If
+                    Else
+                        If Not IsDBNull(p.Item("enddate")) Then
+                            enddate = p.Item("enddate")
                         End If
                     End If
 
@@ -3998,6 +4141,9 @@ Public Class CalculateExpenses
                         '               Select myrecord
 
                         Dim enddate As Date? = Nothing
+                        If Not IsDBNull(p.Item("enddate")) Then
+                            enddate = p.Item("enddate")
+                        End If
                         If dbtools1.Region = "HK" Then
                             If Not IsDBNull(p.Item("effectivedatestart")) Then
                                 joindate = p.Item("effectivedatestart")
@@ -4007,6 +4153,10 @@ Public Class CalculateExpenses
                             End If
                             If Not IsDBNull(p.Item("effectivedateend")) Then
                                 enddate = p.Item("effectivedateend")
+                            End If
+                        Else
+                            If Not IsDBNull(p.Item("enddate")) Then
+                                enddate = p.Item("enddate")
                             End If
                         End If
 
