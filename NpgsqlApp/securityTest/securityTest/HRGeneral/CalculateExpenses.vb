@@ -1230,54 +1230,99 @@ Public Class CalculateExpenses
         '13 -> has 13th Month
         'other than that doesn't have 13th Month
 
-        If dbtools1.Region = "HK" Then
-            'Check bonusfactor. if 13 then continue with the calculation
-            If Not IsDBNull(p.Item("bonusfactor")) Then
-                If p.Item("bonusfactor") = 13 Then
-                    Dim validmonth As Integer = 12
-                    Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
-                    Dim LastSalary As Decimal
-                    'Calculate 13th month 
-                    Dim enddate As Date? = Nothing
-                    If Not IsDBNull(p.Item("enddate")) Then
-                        enddate = p.Item("enddate")
-                    End If
-                    Dim bonusfactor As Integer = 13
-                    Dim StartMonthSalary As Integer = 1
-                    Dim LastMonthSalary As Integer = 12
+        'If dbtools1.Region = "HK" Then
+        '    'Check bonusfactor. if 13 then continue with the calculation
+        '    If Not IsDBNull(p.Item("bonusfactor")) Then
+        '        If p.Item("bonusfactor") = 13 Then
+        '            Dim validmonth As Integer = 12
+        '            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+        '            Dim LastSalary As Decimal
+        '            'Calculate 13th month 
+        '            Dim enddate As Date? = Nothing
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '            End If
+        '            Dim bonusfactor As Integer = 13
+        '            Dim StartMonthSalary As Integer = 1
+        '            Dim LastMonthSalary As Integer = 12
 
-                    If Not IsDBNull(p.Item("effectivedatestart")) Then
-                        joindate = p.Item("effectivedatestart")
-                        StartMonthSalary = Month(joindate)
-                    End If
-                    If Not IsDBNull(p.Item("enddate")) Then
-                        enddate = p.Item("enddate")
-                        LastMonthSalary = 12 'Month(enddate)
-                    ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
-                        enddate = p.Item("effectivedateend")
-                        LastMonthSalary = Month(enddate)
-                    End If
-                    bonusfactor = p.Item("bonusfactor")
-                    LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
-                    validmonth = LastMonthSalary - StartMonthSalary + 1
-                    Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
-                    'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
-                    For k = StartMonthSalary To LastMonthSalary
-                        createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
-                    Next
+        '            If Not IsDBNull(p.Item("effectivedatestart")) Then
+        '                joindate = p.Item("effectivedatestart")
+        '                StartMonthSalary = Month(joindate)
+        '            End If
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '                LastMonthSalary = 12 'Month(enddate)
+        '            ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+        '                enddate = p.Item("effectivedateend")
+        '                LastMonthSalary = Month(enddate)
+        '            End If
+        '            bonusfactor = p.Item("bonusfactor")
+        '            LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+        '            validmonth = LastMonthSalary - StartMonthSalary + 1
+        '            Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+        '            'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+        '            For k = StartMonthSalary To LastMonthSalary
+        '                createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+        '            Next
 
-                    'Create record
+        '            'Create record
+        '        End If
+        '    End If
+        'Else
+        Dim qry3 = From category In Dataset1.Tables(3)
+                              Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
+                              Select category
+        'Category listed
+
+        For Each dt In qry3
+
+            'Add Checking BonusFactor for HK
+            If dbtools1.Region = "HK" Then
+                If Not IsDBNull(p.Item("bonusfactor")) Then
+                    If p.Item("bonusfactor") <> 13 Then
+                        Exit For
+                    End If
                 End If
-            End If
-        Else
-            Dim qry3 = From category In Dataset1.Tables(3)
-                                  Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
-                                  Select category
-            'Category listed
 
-            For Each dt In qry3
+                Dim validmonth As Integer = 12
+                Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+                Dim LastSalary As Decimal
+                'Calculate 13th month 
+                Dim enddate As Date? = Nothing
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                    Exit For
+                End If
+                ' Dim bonusfactor As Integer = 13
+                Dim StartMonthSalary As Integer = 1
+                Dim LastMonthSalary As Integer = 12
+
+                If Not IsDBNull(p.Item("effectivedatestart")) Then
+                    joindate = p.Item("effectivedatestart")
+                    StartMonthSalary = Month(joindate)
+                End If
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                    LastMonthSalary = 12 'Month(enddate)
+                ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+                    enddate = p.Item("effectivedateend")
+                    LastMonthSalary = Month(enddate)
+                End If
+
+                LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+                validmonth = LastMonthSalary - StartMonthSalary + 1
+                Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+                'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+                For k = StartMonthSalary To LastMonthSalary
+                    createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+                Next
+
+
+            Else
                 Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
                 Dim lastsalary As Double = 0
+
                 Try
                     lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
                 Catch ex As Exception
@@ -1311,13 +1356,225 @@ Public Class CalculateExpenses
                     'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
                     'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
                 End If
+            End If
 
-            Next
-        End If
+            
+
+        Next
+        'End If
 
 
     End Sub
+    Private Sub DoublePay02(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Integer, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
 
+        'For HK, double pay is based on Personal Data column N (No. of Months (Bonus))
+        '13 -> has 13th Month
+        'other than that doesn't have 13th Month
+
+        'If dbtools1.Region = "HK" Then
+        '    'Check bonusfactor. if 13 then continue with the calculation
+        '    If Not IsDBNull(p.Item("bonusfactor")) Then
+        '        If p.Item("bonusfactor") = 13 Then
+        '            Dim validmonth As Integer = 12
+        '            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+        '            Dim LastSalary As Decimal
+        '            'Calculate 13th month 
+        '            Dim enddate As Date? = Nothing
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '            End If
+        '            Dim bonusfactor As Integer = 13
+        '            Dim StartMonthSalary As Integer = 1
+        '            Dim LastMonthSalary As Integer = 12
+
+        '            If Not IsDBNull(p.Item("effectivedatestart")) Then
+        '                joindate = p.Item("effectivedatestart")
+        '                StartMonthSalary = Month(joindate)
+        '            End If
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '                LastMonthSalary = 12 'Month(enddate)
+        '            ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+        '                enddate = p.Item("effectivedateend")
+        '                LastMonthSalary = Month(enddate)
+        '            End If
+        '            bonusfactor = p.Item("bonusfactor")
+        '            LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+        '            validmonth = LastMonthSalary - StartMonthSalary + 1
+        '            Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+        '            'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+        '            For k = StartMonthSalary To LastMonthSalary
+        '                createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+        '            Next
+
+        '            'Create record
+        '        End If
+        '    End If
+        'Else
+        Dim qry3 = From category In Dataset1.Tables(3)
+                              Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
+                              Select category
+        'Category listed
+
+        For Each dt In qry3
+
+            'Add Checking BonusFactor for HK
+            If dbtools1.Region = "HK" Then
+                If Not IsDBNull(p.Item("bonusfactor")) Then
+                    If p.Item("bonusfactor") <> 13 Then
+                        Exit For
+                    End If
+                End If
+            Else
+
+            End If
+
+            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+            Dim lastsalary As Double = 0
+
+            Try
+                lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
+            Catch ex As Exception
+
+            End Try
+
+            'Probation
+            If joindate > CDate(myyear & "-10-01") Then lastsalary = 0
+            If lastsalary > 0 Then
+                'Dim doublepay = lastsalary * enttitlement * p.Item("headcount")
+                Dim doublepay = lastsalary * enttitlement '* p.Item("headcount")
+                PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay
+                If dbtools1.Region = "TW" Or dbtools1.Region = "HK" Or dbtools1.Region = "PH" Then
+                    'doublepay = doublepay / 12
+                    doublepay = ValidateJoinDate(joindate, p.Item("enddate"), doublepay) 'monthly
+                End If
+
+
+                'get categorytxmonths
+                Dim mymonths = From myrecord In Dataset1.Tables(14)
+                               Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = "13th Month"
+                               Select myrecord
+
+                For Each record In mymonths
+                    If ValidJoinDate(joindate, record.Item("months"), myyear) Then
+                        createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
+                    End If
+
+                Next
+                'persondata1.doublepay = doublepay
+                'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
+                'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
+            End If
+
+        Next
+        'End If
+
+
+    End Sub
+    Private Sub DoublePayOld(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Integer, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
+
+        'For HK, double pay is based on Personal Data column N (No. of Months (Bonus))
+        '13 -> has 13th Month
+        'other than that doesn't have 13th Month
+
+        'If dbtools1.Region = "HK" Then
+        '    'Check bonusfactor. if 13 then continue with the calculation
+        '    If Not IsDBNull(p.Item("bonusfactor")) Then
+        '        If p.Item("bonusfactor") = 13 Then
+        '            Dim validmonth As Integer = 12
+        '            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+        '            Dim LastSalary As Decimal
+        '            'Calculate 13th month 
+        '            Dim enddate As Date? = Nothing
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '            End If
+        '            Dim bonusfactor As Integer = 13
+        '            Dim StartMonthSalary As Integer = 1
+        '            Dim LastMonthSalary As Integer = 12
+
+        '            If Not IsDBNull(p.Item("effectivedatestart")) Then
+        '                joindate = p.Item("effectivedatestart")
+        '                StartMonthSalary = Month(joindate)
+        '            End If
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '                LastMonthSalary = 12 'Month(enddate)
+        '            ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+        '                enddate = p.Item("effectivedateend")
+        '                LastMonthSalary = Month(enddate)
+        '            End If
+        '            bonusfactor = p.Item("bonusfactor")
+        '            LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+        '            validmonth = LastMonthSalary - StartMonthSalary + 1
+        '            Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+        '            'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+        '            For k = StartMonthSalary To LastMonthSalary
+        '                createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+        '            Next
+
+        '            'Create record
+        '        End If
+        '    End If
+        'Else
+        Dim qry3 = From category In Dataset1.Tables(3)
+                              Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
+                              Select category
+        'Category listed
+
+        For Each dt In qry3
+
+            'Add Checking BonusFactor for HK
+            If dbtools1.Region = "HK" Then
+                If Not IsDBNull(p.Item("bonusfactor")) Then
+                    If p.Item("bonusfactor") <> 13 Then
+                        Exit For
+                    End If
+                End If
+            End If
+
+            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+            Dim lastsalary As Double = 0
+
+            Try
+                lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
+            Catch ex As Exception
+
+            End Try
+
+            'Probation
+            If joindate > CDate(myyear & "-10-01") Then lastsalary = 0
+            If lastsalary > 0 Then
+                'Dim doublepay = lastsalary * enttitlement * p.Item("headcount")
+                Dim doublepay = lastsalary * enttitlement '* p.Item("headcount")
+                PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay
+                If dbtools1.Region = "TW" Or dbtools1.Region = "HK" Or dbtools1.Region = "PH" Then
+                    'doublepay = doublepay / 12
+                    doublepay = ValidateJoinDate(joindate, p.Item("enddate"), doublepay) 'monthly
+                End If
+
+
+                'get categorytxmonths
+                Dim mymonths = From myrecord In Dataset1.Tables(14)
+                               Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = "13th Month"
+                               Select myrecord
+
+                For Each record In mymonths
+                    If ValidJoinDate(joindate, record.Item("months"), myyear) Then
+                        createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
+                    End If
+
+                Next
+                'persondata1.doublepay = doublepay
+                'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
+                'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
+            End If
+
+        Next
+        'End If
+
+
+    End Sub
     Private Sub GroupBonus1(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Object, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
         'Debug.WriteLine("apply: {2} For Personjoindatecategoryid: {0}, expensesnatureid: {1}  - {2},personexpensesid: {3} ", personjoindatecategoryid, dr.Item("expensesnatureid"), dr.Item("expensesnature"), personexpensesid)
 
