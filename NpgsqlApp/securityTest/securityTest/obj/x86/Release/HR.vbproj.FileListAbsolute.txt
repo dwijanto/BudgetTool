@@ -400,4 +400,3 @@ C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\ob
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\obj\x86\Release\HR.FormUser.resources
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\obj\x86\Release\HR.vbproj.GenerateResource.Cache
 C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\bin\Release\npgsql.dll
-C:\Users\dlie\Documents\GitHub\BudgetTool\NpgsqlApp\securityTest\securityTest\bin\Release\Mono.Security.dll

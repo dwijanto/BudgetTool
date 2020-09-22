@@ -209,7 +209,7 @@ Public Class ImportHRInformation
             For i = 12 To iCols
 
                 BackgroundWorker1.ReportProgress(2, "Processing Column " & i & " of " & iCols & "...")
-                If i = 18 Then
+                If i = 23 Then
                     Debug.WriteLine("Debug mode")
                 End If
 
@@ -261,7 +261,7 @@ Public Class ImportHRInformation
 
                     'Dim enddateSTR As String = String.Empty
                     For J = 14 To iRows
-                        If J = 88 Then
+                        If J = 86 Or J = 60 Then
                             Debug.WriteLine("Debug Mode")
                             'If Not IsNothing(oSheet.Cells(J, 1).value) Then
                             '    If oSheet.Cells(J, 8).value = "ZHOU Cheng Jin" Then
@@ -513,11 +513,18 @@ Public Class ImportHRInformation
                             For J = 14 To iRows
                                 If Not IsNothing(oSheet.Cells(J, i + 1).value) Then
                                     BackgroundWorker1.ReportProgress(2, "Processing Column " & i & " of " & iCols & ".Row " & J)
+
+                                    If J = 60 Then
+                                        Debug.Print("Debug")
+                                    End If
                                     Dim startingdate As Date = getdate(oSheet.Cells(J, i + 1).value.ToString, myyear)
                                     Dim amount As Double = oSheet.Cells(J, i).value.ToString
                                     If txtype = "catch up" Then
                                         'DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 8).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid)
-                                        DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 8).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid, regionImport, myyear)
+                                        'DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 8).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid, regionImport, myyear)
+                                        'DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 9).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid, regionImport, myyear)
+                                        'DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 9).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid, regionImport, myyear)
+                                        DbAdapter1.insertsalarytx(oSheet.Cells(J, 1).value.ToString, oSheet.Cells(J, 3).value.ToString, oSheet.Cells(J, 5).value.ToString, oSheet.Cells(J, 8).value.ToString, oSheet.Cells(J, 9).value.ToString, CDbl(oSheet.Cells(J, i).value.ToString), startingdate, txtype, myVerid, regionImport, myyear)
                                     ElseIf txtype = "general increment" Then
                                         'get categoryid
                                         Dim categoryid As Integer = DbAdapter1.getcategoryId(oSheet.Cells(J, 1).value.ToString)
@@ -1158,6 +1165,7 @@ Public Class ImportHRInformation
         Dataset1.Tables(4).PrimaryKey = keys4
 
         'Read from coloumn and row
+        'For i = 14 To iCols
         For i = 14 To iCols
             BackgroundWorker1.ReportProgress(2, "Col: " & i & " of " & iCols)
             expensescheck = 0
@@ -1282,7 +1290,7 @@ Public Class ImportHRInformation
 
                             End If
                         End If
-                        
+
 
                     Next
                 End If

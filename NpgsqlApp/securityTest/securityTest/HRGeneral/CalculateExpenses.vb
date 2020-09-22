@@ -455,8 +455,11 @@ Public Class CalculateExpenses
                 GetParamVar(Dataset1, GeneralRate, GeneralIncrMonth, ExpatRate, ExpatIncrMonth, serviceyear10, serviceyear15, AmountA, AmountB, AmountC, MPFValue, MPFFloorValue)
                 Dim mymessage As String = String.Empty
 
-                Dim PersonSalaryDict As New Dictionary(Of Integer, persondata)
+                Dim PersonSalaryDict As New Dictionary(Of Integer, persondata)                
                 Dim PersonWageDict As New Dictionary(Of Integer, persondata)
+
+                Dim PersonSplitSalaryDict As New Dictionary(Of String, SplitSalary) 'staff name, salary :: 03406511,salary[1-12]
+
                 'calculate Salary Base Salary
 
                 For i = 0 To Dataset1.Tables(0).Rows.Count - 1
@@ -464,17 +467,26 @@ Public Class CalculateExpenses
                     Dim dr As DataRow = Dataset1.Tables(0).Rows(i)
                     'expensesdetailtxid,sapaccname,expensesnatureid,expensesnature,sapaccount,sapaccid,sapcc,dept,currency,fullyear,indexcostcenterdeptid
                     Debug.WriteLine(String.Format("i:{0} sapccname:{1} expensesnature:{2} sapccid:{3} sapcc:{4}", i, dr.Item(1).ToString, dr.Item(3).ToString, dr.Item(5).ToString, dr.Item(6).ToString))
-                    CalculateSalary(dr, PersonSalaryDict, Dataset1, PersonWageDict)
+                    'If dbtools1.RegionId = 1 Then ' hk
+                    CalculateSalary(dr, PersonSalaryDict, PersonSplitSalaryDict, Dataset1, PersonWageDict)
+                    'Else
+                    'CalculateSalary(dr, PersonSalaryDict, Dataset1, PersonWageDict)
+                    'End If
                 Next
 
                 For i = 0 To Dataset1.Tables(15).Rows.Count - 1
 
                     Dim dr As DataRow = Dataset1.Tables(15).Rows(i)
                     Debug.WriteLine(String.Format("{0} {1} {2} {3} {4}", i, dr.Item(1).ToString, dr.Item(3).ToString, dr.Item(5).ToString, dr.Item(6).ToString))
-                    CalculateSalary(dr, PersonSalaryDict, Dataset1, PersonWageDict)
+                    ' If dbtools1.RegionId = 1 Then
+                    CalculateSalary(dr, PersonSalaryDict, PersonSplitSalaryDict, Dataset1, PersonWageDict)
+                    'Else
+                    '    CalculateSalary(dr, PersonSalaryDict, Dataset1, PersonWageDict)
+                    ' End If
+
                 Next
 
-                calculateExpenses2(Dataset1, PersonSalaryDict)
+                calculateExpenses2(Dataset1, PersonSalaryDict, PersonSplitSalaryDict)
 
                 'Calculate Emp Comp
                 calculateExpenses3(Dataset1, PersonSalaryDict)
@@ -799,12 +811,312 @@ Public Class CalculateExpenses
                     'PersonSalaryDict.Add(icdpjcid, persondata1)
                     'End If
                 End If
-
-                End If
+            End If
                 'Debug.WriteLine("Person Name: {0}, ExpensesNature: {1}, Personjoindatecategory: {2} ,sapaccname: {3},sapaccount: {4}, costcenter: {5},  sapaccid:{6} , indexcostcenterdeptid {7}", p.Item("personname"), dr.Item("expensesnature"), p.Item("personjoindatecategoryid"), dr.Item("sapaccname"), dr.Item("sapaccount"), dr.Item("sapcc"), dr.Item("sapaccid"), dr.Item("indexcostcenterdeptid"))
         Next
     End Sub
+    Private Sub CalculateSalary(ByVal dr As DataRow, ByRef PersonSalaryDict As Dictionary(Of Integer, persondata), ByRef PersonSplitSalaryDict As Dictionary(Of String, SplitSalary), ByVal dataset1 As DataSet, ByRef PersonWageDict As Dictionary(Of Integer, persondata))
+        Dim expensesdetailtxid = dr.Item("expensesdetailtxid")
+        Dim expensesnature As String = dr.Item("expensesnature").ToString
+        Dim sapaccount As String = dr.Item("sapaccount").ToString
+        Dim sapcc As String = dr.Item("sapcc").ToString
+        Dim dept As String = dr.Item("dept").ToString
+        Dim indexcostcenterdeptid = dr.Item("indexcostcenterdeptid").ToString
 
+        Dim mysb As New StringBuilder
+
+        '2 select person for each expenses from table person categoryview using linq
+        Dim myquery = From persons In dataset1.Tables(2)
+                       Where persons.Item("dept").ToString = dept
+                      Select persons Order By persons.Item("personname")
+        Dim i = 0
+
+        For Each p In myquery
+            Dim persondata1 As New persondata
+            Dim splitsalary1 As New SplitSalary
+
+            i += 1
+            Debug.WriteLine(String.Format("{0} StaffName:{1} OtherName:{2} PersonJoindateCategoryId:{3}", i, p.Item(1).ToString, p.Item(2).ToString, p.Item("personjoindatecategoryid")))
+            If p.Item(0) = 6701 Then '"FU Kang" Or p.Item(1) = "03403974" Then
+                Debug.Print("debug")
+            End If
+
+            'Add new Dictionary
+            Try
+                If Not PersonSplitSalaryDict.ContainsKey(p.Item(1)) Then
+                    PersonSplitSalaryDict.Add(p.Item(1), splitsalary1)
+                End If
+            Catch ex As Exception
+                Debug.Print("Error")
+            End Try
+
+
+            Dim serviceyear As Double = 0.0
+            Dim incr As Double = 0
+            Dim lastmonth As Integer
+            serviceyear = Math.Round(((CDate(DateTimePicker1.Value.Year & "-12-31") - CDate(p.Item(3).ToString)).Days / 365), 2)
+
+            'get personexpensesid for budgetRecord
+            Dim personjoindatecategoryid = p.Item(0)
+            'Dim icdpjcid = dr.Item("icdpjcid")
+
+            Dim personexpensesid As Integer = 0
+            Dim headcount As Double = p.Item(9)
+            Dim mycategory As String = p.Item(5)
+            Dim joindate As Date = p.Item(3)
+
+            If personjoindatecategoryid = 375 Then
+                Debug.WriteLine("debug mode")
+            End If
+
+            'get icdpjcid 
+            'find icdpjcid kalok ga ada jangan di create
+            'Dim icdpjcid = DbAdapter1.geticdpjcid(personjoindatecategoryid, indexcostcenterdeptid)
+            'personexpenses.Item("expensesdetailtxid") = expensesdetailtxid
+            'Dim pq = From personexpenses In dataset1.Tables(8)
+            'Where(personexpenses.Item("personjoindatecategoryid") = personjoindatecategoryid And personexpenses.Item("expensesnature") = "Basic Salary" Or personexpenses.Item("expensesnature") = "Salary & Wage")
+            Dim pq = From personexpenses In dataset1.Tables(8)
+                     Where personexpenses.Item("personjoindatecategoryid") = personjoindatecategoryid And personexpenses.Item("expensesdetailtxid") = expensesdetailtxid
+
+
+            '*********************check relasi expenses dan person sarch pake icdpjc***********
+
+            'Dim pq = From personexpenses In dataset1.Tables(8)
+            '         Where personexpenses.Item("personjoindatecategoryid") = personjoindatecategoryid And personexpenses.Item("icdpjcid") = icdpjcid
+            '         Select personexpenses
+            For Each pe In pq
+                personexpensesid = pe.Item("personexpensesid")
+            Next
+
+
+
+            If personexpensesid = 0 Then
+                'Create personexpensesid
+                'personexpensesid = DbAdapter1.getpersonexpensesid(icdpjcid, expensesdetailtxid)
+            End If
+            If personexpensesid > 0 Then
+                Dim SalaryDict As New Dictionary(Of Integer, Double)
+                If personjoindatecategoryid = 375 Then
+                    Debug.WriteLine("debug mode")
+                End If
+                If dr.Item("expensesnature").ToString = "Basic Salary" Or dr.Item("expensesnature").ToString = "Salary & Wage" Then
+
+                    Dim baseSalary As Double = 0
+                    Dim validdate As Date
+                    BackgroundWorker1.ReportProgress(2, String.Format("Processing ******{0}********", expensesnature))
+
+                    Dim catchupValue As Double = 0
+                    Dim catchupDate As Date
+                    Dim CatchupValueDict As New Dictionary(Of Integer, Double)
+
+                    Dim incrVal As Double = 0
+                    'Dim incrDate As Date
+                    Dim incrValDict As New Dictionary(Of Integer, Double)
+
+                    For L = 1 To 12
+                        CatchupValueDict.Add(L, 0)
+                        incrValDict.Add(L, 0)
+                        SalaryDict.Add(L, 0)
+                        persondata1.salaryDict.Add(L, 0)
+
+                    Next
+
+                    Dim q = From catchup In dataset1.Tables(6)
+                            Where catchup.Item("personjoindatecategoryid") = personjoindatecategoryid And catchup.Item("txtype") = "catch up"
+                            Select catchup
+
+                    For Each myresult In q
+                        catchupValue = myresult.Item("amount")
+                        catchupDate = myresult.Item("validfrom")
+                        CatchupValueDict(catchupDate.Month) = catchupValue
+                    Next
+                    '
+
+                    'getBaseSalary from personexpensesdtl (the first salary in year budget) this part for person who joined BEFORE year budget
+                    Dim qry = From expenses In dataset1.Tables(5)
+                              Where expenses.Item("personjoindatecategoryid") = personjoindatecategoryid And (expenses.Item("expensesnature") = "Basic Salary" Or expenses.Item("expensesnature") = "Salary & Wage") And expenses.Item("validdate") < CDate(DateTimePicker1.Value.Year & "/1/1")
+                              Select expenses Order By expenses.Item("validdate") Descending
+
+                    For Each myresult In qry
+                        'baseSalary = myresult.Item("amount")
+                        baseSalary = myresult.Item("amount") * p.Item("headcount")
+                        validdate = myresult.Item("validdate")
+                        Exit For
+                    Next
+
+                    'getBaseSalary from personexpensesdtl (the first salary in year budget) this part for person who joined IN year budget
+                    Dim qry2 = From expenses In dataset1.Tables(9)
+                            Where expenses.Item("personjoindatecategoryid") = personjoindatecategoryid And (expenses.Item("expensesnature") = "Basic Salary" Or expenses.Item("expensesnature") = "Salary & Wage") And expenses.Item("validdate") >= CDate(DateTimePicker1.Value.Year & "/01/01") And expenses.Item("validdate") <= CDate(DateTimePicker1.Value.Year & "/12/31")
+                            Select expenses Order By expenses.Item("validdate") Ascending
+                    For Each myresult2 In qry2
+                        'baseSalary = myresult2.Item("amount")
+                        baseSalary = myresult2.Item("amount") * p.Item("headcount")
+
+                        validdate = myresult2.Item("validdate")
+                        Exit For
+                    Next
+
+                    'If baseSalary = 0 Then
+                    '    Debug.WriteLine("debugMode")
+                    'End If
+                    'If p.Item("personname") = "ZHOU Cheng Jin II" Then
+                    '    Debug.WriteLine("debug mode")
+                    '    'MessageBox.Show("ZHOU Cheng Jin is here.")
+                    'End If
+
+                    Dim enddate As Date? = Nothing
+                    If Not IsDBNull(p.Item("enddate")) Then
+                        enddate = p.Item("enddate")
+                    End If
+                    If Not IsDBNull(p.Item("effectivedateend")) Then
+                        enddate = p.Item("effectivedateend")
+                    End If
+
+                    'Last month will be override below
+                    If p.Item("enddate").ToString = "" Then
+                        lastmonth = 12
+                    Else
+                        lastmonth = CDate(p.Item("enddate").ToString).Month
+                    End If
+
+                    Dim totalsalary As Double = 0
+
+                    'If dbtools1.Region = "HK" Or dbtools1.Region = "TW" Or dbtools1.Region = "SZ" Then
+                    If p.Item("expat") Then 'Expat Calculation
+                        incr = IIf(serviceyear > 1, ExpatRate, 0)
+                        incrMonth = ExpatIncrMonth
+                    Else 'General Calculation
+                        incr = IIf(serviceyear > 1, GeneralRate, 0)
+                        'Shenzen SZD2 SZD3 no need increment
+                        incrMonth = 0
+                        If Not "SZD2,SZD3".Contains(mycategory) Then
+                            incrMonth = GeneralIncrMonth
+                        Else
+                            Debug.Print("incrMonth debug.")
+                        End If
+
+                    End If
+
+                    'End If
+
+                    'If personjoindatecategoryid = 51 Then
+                    '    Debug.WriteLine("debug mode")
+                    'End If
+                    'If p.Item(2) = "Charlene" Then
+                    '    Debug.WriteLine("debug mode")
+                    'End If
+
+                    Dim mytempsalary = 0
+                    Dim myorisalary = baseSalary
+                    For K = 1 To 12
+                        'For K = 1 To 12
+                        Dim kDate As Date = CDate(myyear & "-" & K & "-1")
+
+                        If K = incrMonth Then
+                            If serviceyear > 1 Then
+                                If Not "SZD2,SZD3".Contains(mycategory) Then
+                                    baseSalary *= (incr + 1)
+                                End If
+
+                                DbAdapter1.insertpersonexpensesdtl(personexpensesid, baseSalary, kDate)
+                            End If
+                        End If
+                        'Check Catchup
+                        If CatchupValueDict(K) <> 0 Then
+                            If K = incrMonth Then
+                                baseSalary = myorisalary * (1 + CatchupValueDict(K) + incr)
+                            Else
+                                baseSalary *= (1 + CatchupValueDict(K))
+                            End If
+
+                            DbAdapter1.insertpersonexpensesdtl(personexpensesid, baseSalary, kDate)
+                        End If
+                        'create record budget
+
+                        'Modified on 2013-08-08
+                        'If validdate <= kDate And K <= lastmonth Then
+                        'If Month(validdate) <= K And K <= lastmonth Then
+
+                        'Check Lastmonth with effectivedateend, check effectivedatestart
+                        If Not IsDBNull(p.Item("effectivedateend")) Then
+                            lastmonth = Month(p.Item("effectivedateend"))
+                        End If
+                        If Not IsDBNull(p.Item("effectivedatestart")) Then
+                            validdate = p.Item("effectivedatestart")
+                        End If
+                        If ValidJoinDate(validdate, K, myyear) And K <= lastmonth Then
+
+                            'totalsalary += baseSalary
+                            SalaryDict(K) = baseSalary
+                            persondata1.salaryDict(K) = baseSalary
+                            mytempsalary = baseSalary
+                            If dbtools1.Region = "HK" Then
+                                PersonSplitSalaryDict(p.Item(1)).SalaryDict(K) = baseSalary
+                                If PersonSplitSalaryDict(p.Item(1)).LastKnowSalary <= lastmonth And p.Item(13) = 13 Then
+                                    PersonSplitSalaryDict(p.Item(1)).LastKnowSalary = lastmonth
+                                End If
+                            End If
+
+
+                            'If baseSalary = 0 Then
+                            '    Debug.WriteLine("debugMode")
+                            'End If
+                            'Dim mydate As String = "'" & DateTimePicker1.Value.Year & "-" & K & "-1'"
+
+                            'Debug.WriteLine("Person Name {0} Dept {1} personexpensesid {2} ExpensesNature {3} Personjoindatecategory {4} myDate {5}", p.Item("personname"), p.Item("dept"), personexpensesid, dr.Item("expensesnature"), p.Item("personjoindatecategoryid"), mydate)
+                            'Debug.WriteLine("Create Record {0}", baseSalary)
+                        Else
+
+                            mytempsalary = 0
+                        End If
+                        Dim mydate As String = DateFormatyyyyMMdd(kDate)
+
+                        'add validation starting date and enddate
+                        If ValidJoinDate(validdate, K, myyear) And K <= lastmonth Then
+                            'check effectivedate
+                            'createrecord(stringBuilder1, personexpensesid, mytempsalary, myverid, mydate, p.Item("headcount"), p.Item("enddate"))
+                            createrecord(stringBuilder1, personexpensesid, mytempsalary, myverid, mydate, p.Item("headcount"), enddate)
+                        End If
+
+                        If p.Item("personname") = "FU Kang" Then
+                            'MessageBox.Show("ZHOU Cheng Jin - Create Record Salary. Personexpensesid = " & personexpensesid & ", Month = " & K)
+                        End If
+
+                        'Added catchup in feb - Mar
+                        'myorisalary = mytempsalary
+                        myorisalary = baseSalary
+                    Next
+
+                    '*******Debug.WriteLine("Person Name {0}  personexpensesid {1} ExpensesNature {2} Personjoindatecategory {3} sapaccname  {4} sapaccount {5} costcenter{6} indexcostcenterdeptid {7}", p.Item("personname"), personexpensesid, dr.Item("expensesnature"), p.Item("personjoindatecategoryid"), dr.Item("sapaccname"), dr.Item("sapaccount"), dr.Item("sapcc"), dr.Item("sapaccid"), dr.Item("indexcostcenterdeptid"))
+                    'If dr.Item("expensesnature") = "Basic Salary" Then
+                    'If personjoindatecategoryid = 372 Then
+                    '    Debug.WriteLine("debug mode")
+                    'End If
+                    'MessageBox.Show(personjoindatecategoryid & " " & p.Item("personname"))
+                    Try
+                        If Not PersonSalaryDict.ContainsKey(personjoindatecategoryid) Then
+
+
+                            PersonSalaryDict.Add(personjoindatecategoryid, persondata1)
+                        End If
+                    Catch ex As Exception
+                        Debug.Print("Error")
+                    End Try
+
+
+
+
+                    'PersonSalaryDict.Add(icdpjcid, persondata1)
+                    'ElseIf dr.Item("expensesnature") = "Salary & Wage" Then
+                    '    PersonWageDict.Add(personjoindatecategoryid, persondata1)
+                    'PersonSalaryDict.Add(icdpjcid, persondata1)
+                    'End If
+                End If
+
+            End If
+            'Debug.WriteLine("Person Name: {0}, ExpensesNature: {1}, Personjoindatecategory: {2} ,sapaccname: {3},sapaccount: {4}, costcenter: {5},  sapaccid:{6} , indexcostcenterdeptid {7}", p.Item("personname"), dr.Item("expensesnature"), p.Item("personjoindatecategoryid"), dr.Item("sapaccname"), dr.Item("sapaccount"), dr.Item("sapcc"), dr.Item("sapaccid"), dr.Item("indexcostcenterdeptid"))
+        Next
+    End Sub
     Private Sub calculateExpenses2(ByVal Dataset1 As DataSet, ByRef PersonSalaryDict As Dictionary(Of Integer, persondata))
         For i = 0 To Dataset1.Tables(10).Rows.Count - 1
             Dim dr As DataRow = Dataset1.Tables(10).Rows(i)
@@ -898,7 +1210,99 @@ Public Class CalculateExpenses
             Next
         Next
     End Sub
+    Private Sub calculateExpenses2(ByVal Dataset1 As DataSet, ByRef PersonSalaryDict As Dictionary(Of Integer, persondata), ByRef PersonSplitSalaryDict As Dictionary(Of String, SplitSalary))
+        For i = 0 To Dataset1.Tables(10).Rows.Count - 1
+            Dim dr As DataRow = Dataset1.Tables(10).Rows(i)
+            Dim expensesdetailtxid = dr.Item("expensesdetailtxid")
+            Dim expensesnature As String = dr.Item("expensesnature").ToString
+            Dim expensesnatuerid As Integer = dr.Item("expensesnatureid")
 
+            Dim sapaccount As String = dr.Item("sapaccount").ToString
+            Dim sapcc As String = dr.Item("sapcc").ToString
+
+            Dim dept As String = dr.Item("dept").ToString
+
+            '2 select person for each expenses from table person categoryview using linq
+            Dim myquery = From persons In Dataset1.Tables(2)
+                          Where persons.Item("dept").ToString = dept
+                          Select persons Order By persons.Item("personname")
+
+
+            For Each p In myquery
+
+                Dim persondata1 As New persondata
+
+                BackgroundWorker1.ReportProgress(3, String.Format("{0} {1} {2} {3} ", dr.Item("sapaccname").ToString, dr.Item("expensesnature").ToString, dr.Item("sapaccid").ToString, dr.Item("dept").ToString))
+                Dim serviceyear As Double = 0.0
+                Dim incr As Double = 0
+                'Dim lastmonth As Integer
+                serviceyear = Math.Round(((CDate(DateTimePicker1.Value.Year & "-12-31") - CDate(p.Item(3).ToString)).Days / 365), 2)
+
+                'get personexpensesid for budgetRecord
+                Dim personjoindatecategoryid = p.Item("personjoindatecategoryid")
+
+                Dim personexpensesid As Integer = 0
+                Dim personjoindateid = p.Item("personjoindateid")
+                Dim headcount As Double = p.Item("headcount")
+                Dim mycategory As String = p.Item("category")
+                Dim joindate As Date = p.Item("joindate")
+
+                Dim pq = From personexpenses In Dataset1.Tables(8)
+                         Where personexpenses.Item("personjoindatecategoryid") = personjoindatecategoryid And personexpenses.Item("expensesdetailtxid") = expensesdetailtxid
+                         Select personexpenses
+                For Each pe In pq
+                    personexpensesid = pe.Item("personexpensesid")
+                Next
+
+
+
+                If personexpensesid = 0 Then
+                    'personexpensesid = DbAdapter1.getpersonexpensesid(personjoindatecategoryid, expensesdetailtxid)
+
+                End If
+                If personexpensesid > 0 Then
+
+                    'Calculate Expenses
+                    BackgroundWorker1.ReportProgress(2, String.Format("Processing  *** {0} ***", dr.Item("expensesnature")))
+                    Debug.WriteLine("Expenses nature: {0}", dr.Item("expensesnature"))
+
+                    If dr.Item("expensesnature") = "Salary tax by ER" Or
+                        dr.Item("expensesnature") = "Insurance - Housing" Or
+                        dr.Item("expensesnature") = "Trip credit" Or
+                         dr.Item("expensesnature") = "Bonus" Or
+                        dr.Item("expensesnature") = "Travel Insur AIG (PUR)" Then
+                        Debug.Print("Test")
+                    End If
+
+                    If dr.Item("expensesnature") = "13th Month" Then
+                        Call DoublePay(stringBuilder1, Dataset1, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, PersonSplitSalaryDict, persondata1, p)
+                    ElseIf dr.Item("expensesnature").ToString = "Group Bonus" Then 'Each Person
+                        Call GroupBonus(stringBuilder1, Dataset1, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, p)
+                    ElseIf dr.Item("expensesnature").ToString = "Local Bonus" Then
+                        Call LocalBonus(stringBuilder1, Dataset1, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, p)
+                    ElseIf dr.Item("expensesnature").ToString = "Other Bonus" Then
+                        Call OtherBonus(stringBuilder1, Dataset1, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, p)
+                    ElseIf dr.Item("expensesnature") = "Local medical expenses" Then
+                        Call LocalMedicalExpenses(stringBuilder1, Dataset1, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, personjoindateid, p)
+                    ElseIf dr.Item("expensesnature").ToString = "Red Pocket" Then
+                        'Call RedPocket(stringBuilder1, Dataset1, dr,p,serviceyer,verid, personexpensesid, verid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, personjoindateid)
+                        Call RedPocket(stringBuilder1, Dataset1, dr, p, personexpensesid, serviceyear, myverid, PersonSalaryDict, persondata1)
+                    ElseIf dr.Item("expensesnature").ToString = "staff award" Then
+                        Call StaffAward(stringBuilder1, Dataset1, dr, p, personexpensesid, serviceyear, myverid, PersonSalaryDict, persondata1, personjoindatecategoryid)
+                    ElseIf dr.Item("expensesnature").ToString = "Training (Dept)" Then
+                        Call TrainingDept(stringBuilder1, Dataset1, dr, p, personexpensesid, serviceyear, myverid, PersonSalaryDict, persondata1)
+                    ElseIf dr.Item("expensesnature").ToString = "Recruitment Expenses" Then
+                        Call RecruitmentExpenses(stringBuilder1, Dataset1, dr, p, personexpensesid, serviceyear, myverid, PersonSalaryDict, persondata1)
+                    ElseIf Not IsDBNull(dr.Item("fullyear")) Then
+
+                        Call OtherExpenses(stringBuilder1, Dataset1, dr, personexpensesid, myverid, myyear, joindate, serviceyear, mycategory, personjoindatecategoryid, PersonSalaryDict, persondata1, p)
+
+                    End If
+                End If
+
+            Next
+        Next
+    End Sub
     Private Sub calculateExpenses3(ByVal Dataset1 As DataSet, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata))
 
 
@@ -1224,6 +1628,150 @@ Public Class CalculateExpenses
             Next
         Next
     End Sub
+    Private Sub DoublePay(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Integer, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal PersonSplitSalaryDict As Dictionary(Of String, SplitSalary), ByVal persondata1 As persondata, ByVal p As DataRow)
+
+        'For HK, double pay is based on Personal Data column N (No. of Months (Bonus))
+        '13 -> has 13th Month
+        'other than that doesn't have 13th Month
+
+        'If dbtools1.Region = "HK" Then
+        '    'Check bonusfactor. if 13 then continue with the calculation
+        '    If Not IsDBNull(p.Item("bonusfactor")) Then
+        '        If p.Item("bonusfactor") = 13 Then
+        '            Dim validmonth As Integer = 12
+        '            Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+        '            Dim LastSalary As Decimal
+        '            'Calculate 13th month 
+        '            Dim enddate As Date? = Nothing
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '            End If
+        '            Dim bonusfactor As Integer = 13
+        '            Dim StartMonthSalary As Integer = 1
+        '            Dim LastMonthSalary As Integer = 12
+
+        '            If Not IsDBNull(p.Item("effectivedatestart")) Then
+        '                joindate = p.Item("effectivedatestart")
+        '                StartMonthSalary = Month(joindate)
+        '            End If
+        '            If Not IsDBNull(p.Item("enddate")) Then
+        '                enddate = p.Item("enddate")
+        '                LastMonthSalary = 12 'Month(enddate)
+        '            ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+        '                enddate = p.Item("effectivedateend")
+        '                LastMonthSalary = Month(enddate)
+        '            End If
+        '            bonusfactor = p.Item("bonusfactor")
+        '            LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+        '            validmonth = LastMonthSalary - StartMonthSalary + 1
+        '            Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+        '            'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+        '            For k = StartMonthSalary To LastMonthSalary
+        '                createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+        '            Next
+
+        '            'Create record
+        '        End If
+        '    End If
+        'Else
+        Dim qry3 = From category In Dataset1.Tables(3)
+                              Where category.Item("category") = mycategory And category.Item("categorytype") = "13th Month" And category.Item("myyear") = myyear
+                              Select category
+        'Category listed
+
+        For Each dt In qry3
+
+            'Add Checking BonusFactor for HK
+            If dbtools1.Region = "HK" Then
+                If Not IsDBNull(p.Item("bonusfactor")) Then
+                    If p.Item("bonusfactor") <> 13 Then
+                        Exit For
+                    End If
+                End If
+
+                Dim validmonth As Integer = 12
+                Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+                Dim LastSalary As Decimal
+                'Calculate 13th month 
+                Dim enddate As Date? = Nothing
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                    Exit For
+                End If
+                ' Dim bonusfactor As Integer = 13
+                Dim StartMonthSalary As Integer = 1
+                Dim LastMonthSalary As Integer = 12
+
+                If Not IsDBNull(p.Item("effectivedatestart")) Then
+                    joindate = p.Item("effectivedatestart")
+                    StartMonthSalary = Month(joindate)
+                End If
+                If Not IsDBNull(p.Item("enddate")) Then
+                    enddate = p.Item("enddate")
+                    LastMonthSalary = 12 'Month(enddate)
+                ElseIf Not IsDBNull(p.Item("effectivedateend")) Then
+                    enddate = p.Item("effectivedateend")
+                    LastMonthSalary = Month(enddate)
+                End If
+
+                'LastSalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(LastMonthSalary)
+                LastSalary = PersonSplitSalaryDict(p.Item(1)).SalaryDict(PersonSplitSalaryDict(p.Item(1)).LastKnowSalary)
+
+                validmonth = LastMonthSalary - StartMonthSalary + 1
+                enttitlement = 1 'Tracy Request
+                Dim doublepay As Decimal = (LastSalary * enttitlement) / 12
+                'Dim doublepay As Decimal = (LastSalary * enttitlement) / validmonth
+                For k = StartMonthSalary To LastMonthSalary
+                    createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & k & "-1")), p.Item("headcount"), p.Item("enddate"))
+                Next
+
+
+            Else
+                Dim enttitlement = IIf(serviceyear > 1, 1, serviceyear)
+                Dim lastsalary As Double = 0
+
+                Try
+                    lastsalary = DirectCast(PersonSalaryDict(personjoindatecategoryid), persondata).salaryDict(12)
+                Catch ex As Exception
+
+                End Try
+
+                'Probation
+                If joindate > CDate(myyear & "-10-01") Then lastsalary = 0
+                If lastsalary > 0 Then
+                    'Dim doublepay = lastsalary * enttitlement * p.Item("headcount")
+                    Dim doublepay = lastsalary * enttitlement '* p.Item("headcount")
+                    PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay
+                    If dbtools1.Region = "TW" Or dbtools1.Region = "HK" Or dbtools1.Region = "PH" Then
+                        'doublepay = doublepay / 12
+                        doublepay = ValidateJoinDate(joindate, p.Item("enddate"), doublepay) 'monthly
+                    End If
+
+
+                    'get categorytxmonths
+                    Dim mymonths = From myrecord In Dataset1.Tables(14)
+                                   Where myrecord.Item("category") = mycategory And myrecord.Item("categorytype") = "13th Month"
+                                   Select myrecord
+
+                    For Each record In mymonths
+                        If ValidJoinDate(joindate, record.Item("months"), myyear) Then
+                            createrecord(stringBuilder1, personexpensesid, doublepay, myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
+                        End If
+
+                    Next
+                    'persondata1.doublepay = doublepay
+                    'PersonSalaryDict(personjoindatecategoryid).doublepay = doublepay 'move doublepay to top
+                    'Debug.WriteLine("PersonExpensesid {0} {1} ", personexpensesid, personjoindatecategoryid)
+                End If
+            End If
+
+
+
+        Next
+        'End If
+
+
+    End Sub
     Private Sub DoublePay(ByRef stringBuilder1 As StringBuilder, ByVal Dataset1 As DataSet, ByVal personexpensesid As Integer, ByVal myverid As Integer, ByVal myyear As Integer, ByVal joindate As Date, ByVal serviceyear As Double, ByVal mycategory As String, ByVal personjoindatecategoryid As Integer, ByVal PersonSalaryDict As Dictionary(Of Integer, persondata), ByVal persondata1 As persondata, ByVal p As DataRow)
 
         'For HK, double pay is based on Personal Data column N (No. of Months (Bonus))
@@ -1358,7 +1906,7 @@ Public Class CalculateExpenses
                 End If
             End If
 
-            
+
 
         Next
         'End If
@@ -1882,7 +2430,7 @@ Public Class CalculateExpenses
 
                 Else
                     'persondata1.bonus += (grosssalary * myamount)
-                    PersonSalaryDict(personjoindatecategoryid).bonus += (grosssalary * myamount)
+                    PersonSalaryDict(personjoindatecategoryid).bonus += (grosssalary * myamount) 'move to createrecord below
                 End If
 
 
@@ -1957,6 +2505,7 @@ Public Class CalculateExpenses
                             'createrecord(stringBuilder1, personexpensesid, (grosssalary * myamount / validmonth), myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), p.Item("enddate"))
                             'createrecord(stringBuilder1, personexpensesid, (grosssalary * myamount / validmonth), myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), enddate)
                             createrecord(stringBuilder1, personexpensesid, (grosssalary * myamount / validmonth), myverid, DateFormatyyyyMMdd(CDate(myyear & "-" & record.Item("months") & "-1")), p.Item("headcount"), enddate)
+                            'PersonSalaryDict(personjoindatecategoryid).bonus += (grosssalary * myamount / validmonth)
                         End If
 
                     End If
@@ -3786,7 +4335,12 @@ Public Class CalculateExpenses
                             'If joindate <= CDate(myyear & "-" & record.Item("months") & "-1") Then
                             If ValidJoinDate(joindate, record.Item("months"), myyear) Then
                                 'persondata1.commision(record.Item("months")) = myamount
-                                PersonSalaryDict(personjoindatecategoryid).commision(record.Item("months")) = myamount
+                                Try
+                                    PersonSalaryDict(personjoindatecategoryid).commision(record.Item("months")) = myamount
+                                Catch ex As Exception
+                                    'MessageBox.Show(ex.Message)
+                                    Debug.Print("ex.message")
+                                End Try
                             End If
                         ElseIf dr.Item("expensesnature").ToString = "Housing Allowance" Then
                             'modified 2013-0-08
@@ -4619,4 +5173,13 @@ Public Class persondata
         Next
     End Sub
 
+End Class
+Public Class SplitSalary
+    Public Property SalaryDict As New Dictionary(Of Integer, Double)
+    Public Property LastKnowSalary As Integer
+    Sub New()
+        For i = 1 To 12
+            SalaryDict.Add(i, 0)
+        Next
+    End Sub
 End Class

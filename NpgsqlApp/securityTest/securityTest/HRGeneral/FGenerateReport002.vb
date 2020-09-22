@@ -102,13 +102,17 @@ Public Class FGenerateReport002
 
     Private Sub MySub_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         MyRegionId = dbtools1.RegionId
-        Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver order by myorder)"  '"select verid,hrver from ver order by myorder;"
-        dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
+        'Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver order by myorder)"  '"select verid,hrver from ver order by myorder;"
+
+        loadcombobox()
+
+        'Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & "order by myorder);"
+        'dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
         ShortRegion = dbtools1.Region
         RegionName = dbtools1.RegionName
 
         If ShortRegion = "HK" Then
-            sqlstr = "select 0,'All Region' union all (select regionid,regionname from region order by regionname);"
+            Dim sqlstr = "select 0,'All Region' union all (select regionid,regionname from region order by regionname);"
             dbtools1.FillComboboxDataSource(ComboBox2, sqlstr)
             Label3.Visible = True
             ComboBox2.Visible = True
@@ -712,4 +716,13 @@ Public Class FGenerateReport002
     End Sub
 
 
+    Private Sub DateTimePicker1_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DateTimePicker1.ValueChanged
+        loadcombobox()
+    End Sub
+
+
+    Private Sub loadcombobox()
+        Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & "order by myorder);"
+        dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)       
+    End Sub
 End Class

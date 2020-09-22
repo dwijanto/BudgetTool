@@ -129,7 +129,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ODBC;DSN=PostgreSQLHR;")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("ODBC;DSN=PostgreSQLHRTest;")>  _
         Public Property oExCon() As String
             Get
                 Return CType(Me("oExCon"),String)
@@ -602,6 +602,30 @@ Namespace My
             End Get
             Set
                 Me("con10") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Host=SW58O951;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;")>  _
+        Public Property newserver() As String
+            Get
+                Return CType(Me("newserver"),String)
+            End Get
+            Set
+                Me("newserver") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("ODBC;DSN=PostgreSQLHRNEW;")>  _
+        Public Property oExCon4() As String
+            Get
+                Return CType(Me("oExCon4"),String)
+            End Get
+            Set
+                Me("oExCon4") = value
             End Set
         End Property
     End Class

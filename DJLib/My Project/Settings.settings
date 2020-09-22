@@ -21,7 +21,7 @@
       <Value Profile="(Default)">Host=hon10-0046D;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
     </Setting>
     <Setting Name="oExCon" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ODBC;DSN=PostgreSQLHR;</Value>
+      <Value Profile="(Default)">ODBC;DSN=PostgreSQLHRTest;</Value>
     </Setting>
     <Setting Name="MenuStripGradientBegin" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Black</Value>
@@ -143,6 +143,12 @@
     </Setting>
     <Setting Name="con10" Type="System.String" Scope="User">
       <Value Profile="(Default)">Host=SW04G491;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
+    </Setting>
+    <Setting Name="newserver" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Host=SW58O951;port=5432;database=hr;CommandTimeOut=1000;TimeOut=1000;</Value>
+    </Setting>
+    <Setting Name="oExCon4" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ODBC;DSN=PostgreSQLHRNEW;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

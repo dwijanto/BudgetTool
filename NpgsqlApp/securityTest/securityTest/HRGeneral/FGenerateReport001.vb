@@ -109,13 +109,19 @@ Public Class FGenerateReport001
     Private Sub MySub_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         MyRegionId = dbtools1.RegionId
         'Dim sqlstr As String = "select 'Last Version',0 union all select verid,hrver from ver order by myorder;"
-        Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver order by myorder)"
-        dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
+        'Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver order by myorder)"
+
+        loadcombobox()
+        'Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & "order by myorder);"
+        'dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
+
+
         ShortRegion = dbtools1.Region
         RegionName = dbtools1.RegionName
 
         If ShortRegion = "HK" Then         
-            sqlstr = "select 0,'All Region' union all (select regionid,regionname from region order by regionname);"
+            Dim sqlstr = "select 0,'All Region' union all (select regionid,regionname from region order by regionname);"
+            'sqlstr = "select 0,'All Region' union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & " order by myorder);"
             dbtools1.FillComboboxDataSource(ComboBox2, sqlstr)
             Label3.Visible = True
             ComboBox2.Visible = True
@@ -576,4 +582,25 @@ Public Class FGenerateReport001
 
     'End Function
 
+    Private Sub DateTimePicker1_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles DateTimePicker1.ValueChanged
+        loadcombobox()
+    End Sub
+
+    Private Sub loadcombobox()
+        'Clear combobox first
+        'Dim sqlstr As String = "select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & "order by myorder;"
+        Dim mydatatable As New DataTable
+        'dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
+
+        'Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & "order by myorder);"
+        Dim mysqlstr As String = String.Format("select username from usersinroles where username = '{0}' and rolename in ('superuser')", dbtools1.Userid)
+        mydatatable = dbtools1.getData(mysqlstr)
+        Dim sqlstr As String = "(select 0 as verid,'Last Version' as hrver) union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & " and not hrver like 'C&B%' order by myorder)"
+        If mydatatable.Rows.Count > 0 Then
+            sqlstr = sqlstr + "union all (select verid,hrver from ver where ver.myyear = " & DateTimePicker1.Value.Year & " and hrver like 'C&B%' order by myorder)"
+        End If
+        sqlstr = sqlstr + ";"
+        dbtools1.FillComboboxDataSource(ComboBox1, sqlstr)
+        'Call calculateExpensesLoad()
+    End Sub
 End Class

@@ -27,7 +27,7 @@ Public Class FormMenu
             If strbld.Length <> 0 Then
                 strbld.Append(" union ")
             End If
-            If "localhost,172.22.13.139".Contains(ConnectionStringCollections.Item("HOST")) Then  'ConnectionStringCollections.Item("HOST") = "localhost" Or ConnectionStringCollections.Item("HOST") = "172.22.13.139" Then
+            If "localhost,172.22.13.139,SW58O951".Contains(ConnectionStringCollections.Item("HOST")) Then  'ConnectionStringCollections.Item("HOST") = "localhost" Or ConnectionStringCollections.Item("HOST") = "172.22.13.139" Then
                 strbld.Append("(Select isactive,programid,parentid,myorder,description,programname,icon,iconindex,formname from tbprogram " & _
                           " where isactive and  members ~ '\m" & Str & "\y' order by parentid,myorder)")
             Else

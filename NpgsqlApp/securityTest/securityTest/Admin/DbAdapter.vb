@@ -787,13 +787,66 @@ Public Class DbAdapter
         End Try
         Return result
     End Function
-    Function insertsalarytx(ByVal category As String, ByVal costcenter As String, ByVal joindate As Date, ByVal personname As String, _
+    Function insertsalarytx(ByVal category As String, ByVal costcenter As String, ByVal joindate As Date, ByVal personname As String, ByVal othername As String, _
                             ByVal myvalue As Double, ByVal startingdate As Date, ByVal txtype As String, ByVal verid As Integer, ByVal regionid As Integer, ByVal myyear As Integer) As Integer
         Dim result As Object = Nothing
         Try
             Using conn As New NpgsqlConnection(Connectionstring)
                 conn.Open()
                 Dim cmd As NpgsqlCommand = New NpgsqlCommand("sp_insertsalarytx", conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = category
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = costcenter
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Date, 0).Value = joindate
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = personname
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = othername
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Numeric, 0).Value = myvalue
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Date, 0).Value = startingdate
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = txtype
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = verid
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = regionid
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = myyear
+
+                result = cmd.ExecuteScalar
+            End Using
+        Catch ex As Exception
+            Throw New System.Exception(ex.Message)
+        End Try
+        Return result
+    End Function
+    Function insertsalarytx(ByVal category As String, ByVal costcenter As String, ByVal joindate As Date, ByVal personname As String, _
+                            ByVal myvalue As Double, ByVal startingdate As Date, ByVal txtype As String, ByVal verid As Integer, ByVal regionid As Integer, ByVal myyear As Integer) As Integer
+        Dim result As Object = Nothing
+        Try
+            Using conn As New NpgsqlConnection(Connectionstring)
+                conn.Open()                
+                Dim cmd As NpgsqlCommand = New NpgsqlCommand("sp_insertsalarytx", conn)
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = category
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = costcenter
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Date, 0).Value = joindate
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = personname
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Numeric, 0).Value = myvalue
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Date, 0).Value = startingdate
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = txtype
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = verid
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = regionid
+                cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Integer, 0).Value = myyear
+
+                result = cmd.ExecuteScalar
+            End Using
+        Catch ex As Exception
+            Throw New System.Exception(ex.Message)
+        End Try
+        Return result
+    End Function
+    Function insertsalarytxhk(ByVal category As String, ByVal costcenter As String, ByVal joindate As Date, ByVal personname As String, _
+                           ByVal myvalue As Double, ByVal startingdate As Date, ByVal txtype As String, ByVal verid As Integer, ByVal regionid As Integer, ByVal myyear As Integer) As Integer
+        Dim result As Object = Nothing
+        Try
+            Using conn As New NpgsqlConnection(Connectionstring)
+                conn.Open()
+                Dim cmd As NpgsqlCommand = New NpgsqlCommand("sp_insertsalarytxhk", conn)
                 cmd.CommandType = CommandType.StoredProcedure
                 cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = category
                 cmd.Parameters.Add("", NpgsqlTypes.NpgsqlDbType.Varchar, 0).Value = costcenter
